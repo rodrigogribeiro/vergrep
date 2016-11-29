@@ -62,10 +62,15 @@ Inductive in_regex : string -> regex -> Prop :=
   :  forall s' e e'
   ,  s' <<- e'
   -> s' <<- (e :+: e')
-| InStar
-  :  forall s e
-  ,  s <<- (#1 :+: (e @ (e ^*)))
-  -> s <<- (e ^*)
+| InStarLeft
+  : forall e
+  , "" <<- (e ^*)
+| InStarRight              
+  : forall s s' s1 a e
+  ,  (String a s) <<- e
+  -> s' <<- (e ^*)
+  -> s1 = String a (s ++ s')
+  -> s1 <<- (e ^*)                          
 where "s '<<-' e" := (in_regex s e).
 
 Hint Constructors in_regex.
@@ -121,7 +126,7 @@ Definition null : forall (e : regex), { "" <<- e } + { ~ ("" <<- e) }.
          end        
        end
      | (e1 ^*) => fun _ =>
-        left (InStar (InLeft _ InEps))
+        left (InStarLeft _)
         end eq_refl) ; clear null_rec ;
        try intro ; try inverts_in_regex ;
        try 
