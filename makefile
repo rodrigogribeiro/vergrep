@@ -99,7 +99,8 @@ endif
 VFILES:=Tactics/LibTactics.v\
   Syntax/Regex.v\
   Derivatives/Smart.v\
-  Derivatives/Brzozowski.v
+  Derivatives/Brzozowski.v\
+  Derivatives/Antimirov.v
 
 ifneq ($(filter-out archclean clean cleanall printenv,$(MAKECMDGOALS)),)
 -include $(addsuffix .d,$(VFILES))

@@ -7,7 +7,8 @@ Require Export
         Ascii
         Relation_Definitions
         Setoid
-        String.
+        String
+        DecidableTypeEx.
 
 Open Scope string_scope.
 
@@ -171,5 +172,31 @@ Proof.
     [ apply regex_equiv_refl
     | apply regex_equiv_sym
     | apply regex_equiv_trans ].
-Qed.  
+Qed.
 
+Definition regex_eq_dec (e e' : regex) : {e = e'} + {e <> e'}.
+  pose ascii_dec.
+  decide equality.
+Defined.  
+
+(* regex is an decidable type *)
+
+Module Regex_as_DT <: UsualDecidableType.
+
+  Definition t := regex.
+  Definition eq := @eq t.
+  Definition eq_refl := @eq_refl t.
+  Definition eq_sym := @eq_sym t.
+  Definition eq_trans := @eq_trans t.
+
+  Definition eq_dec := regex_eq_dec.
+  Definition eq_equiv : Equivalence eq.
+  Proof.
+    split ; unfolds ;
+      [ apply eq_refl
+      | apply eq_sym
+      | apply eq_trans ].
+  Qed.  
+End Regex_as_DT.  
+
+  

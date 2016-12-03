@@ -4,8 +4,7 @@ Set Implicit Arguments.
 
 Require Import
         Syntax.Regex
-        Derivatives.Smart
-        Program.
+        Derivatives.Smart.
 
 Fixpoint deriv (a : ascii)(e : regex) : regex :=
   match e with
