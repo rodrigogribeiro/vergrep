@@ -5,4 +5,6 @@ Syntax/Regex.v
 Derivatives/Smart.v
 Derivatives/Brzozowski.v
 Derivatives/Antimirov.v
-
+Parsing/Brzozowski.v
+Utils/AsciiOT.v
+Utils/StringOT.v

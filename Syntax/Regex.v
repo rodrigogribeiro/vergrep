@@ -4,25 +4,17 @@ Set Implicit Arguments.
 
 Require Export
         Tactics.LibTactics
-        Ascii
         Relation_Definitions
         Setoid
-        String
-        DecidableTypeEx.
+        List
+        Omega
+        Coq.Structures.Orders
+        Ascii
+        String.
+
+Import ListNotations.
 
 Open Scope string_scope.
-
-Lemma str_append_nil_end : forall s, s ++ "" = s.
-Proof.
-  induction s ; simpl in * ; fequals*.
-Qed.
-
-Lemma str_append_rewind
-  : forall a s s'
-  , String a (s ++ s') = (String a s) ++ s'.
-Proof.
-  intros a s s' ; reflexivity.
-Qed.  
 
 Inductive regex : Set :=
 | Emp : regex  
@@ -45,10 +37,10 @@ Reserved Notation "s '<<-' e" (at level 40).
 
 Inductive in_regex : string -> regex -> Prop :=
 | InEps
-  : "" <<- #1
+  : EmptyString <<- #1
 | InChr
   : forall c
-  , (String c EmptyString) <<- ($ c)
+  , String c EmptyString <<- ($ c)
 | InCat
   :  forall e e' s s' s1
   ,  s <<- e
@@ -65,7 +57,7 @@ Inductive in_regex : string -> regex -> Prop :=
   -> s' <<- (e :+: e')
 | InStarLeft
   : forall e
-  , "" <<- (e ^*)
+  , EmptyString <<- (e ^*)
 | InStarRight              
   : forall s s' s1 a e
   ,  (String a s) <<- e
@@ -87,9 +79,15 @@ Lemma empty_string_concat
   -> s = "" /\ s' = "".
 Proof.
   intros ; destruct s ; destruct s' ; splits ; simpl in * ; try congruence.
-Qed.  
+Qed.
 
-Hint Immediate empty_string_concat.
+Lemma str_append_nil_end
+  : forall (s : string), s ++ "" = s.
+Proof.
+  induction s ; simpl in * ; [idtac | rewrite IHs ] ; eauto.
+Qed.
+
+Hint Resolve empty_string_concat.
 
 (** nullability test *)
             
@@ -128,21 +126,15 @@ Definition null : forall (e : regex), { "" <<- e } + { ~ ("" <<- e) }.
        end
      | (e1 ^*) => fun _ =>
         left (InStarLeft _)
-        end eq_refl) ; clear null_rec ;
-       try intro ; try inverts_in_regex ;
-       try 
-         (match goal with
-          | [H : "" = _ ++ _ |- _] =>
-            apply empty_string_concat in H ;
-            destruct H ;
-            substs ;
-            try contradiction                        
-          end) ; jauto.
+        end eq_refl) ; clear null_rec ; substs* ;
+       repeat (match goal with
+               | [|- ~ _] => intro Hc ; inverts* Hc
+               | [H : "" = _ ++ _ |- _] =>
+                 apply empty_string_concat in H ; destruct* H ; substs*
+               end).
 Defined.
 
-
 (** equivalence *)
-
 
 Definition regex_equiv (e e' : regex) : Prop :=
   forall s, s <<- e <-> s <<- e'.
@@ -196,7 +188,8 @@ Module Regex_as_DT <: UsualDecidableType.
       [ apply eq_refl
       | apply eq_sym
       | apply eq_trans ].
-  Qed.  
-End Regex_as_DT.  
+  Defined.  
+End Regex_as_DT.
 
-  
+(* ordering relation for regex *)
+

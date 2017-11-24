@@ -3,7 +3,10 @@
 Set Implicit Arguments.
 
 Require Import
+        String
         Syntax.Regex.
+
+Open Scope string_scope.
 
 (* choice *)
 
@@ -23,7 +26,8 @@ Qed.
 
 Lemma choice_smart_complete : forall e1 e2 s, s <<- (e1 :+: e2) -> s <<- (e1 :++: e2).
 Proof.
-  induction e1 ; destruct e2 ; simpl in * ; intros s H ; try inverts* H ; try inverts_in_regex.
+  induction e1 ; destruct e2 ; simpl in * ;
+    intros s H ; try inverts* H ; try inverts_in_regex.
 Qed.
 
 (* concatenation *)
@@ -41,15 +45,10 @@ Notation "e1 ':@:' e2" := (cat_smart e1 e2)(at level 40, left associativity).
 
 Lemma cat_smart_sound : forall e1 e2 s, s <<- (e1 :@: e2) -> s <<- (e1 @ e2).
 Proof.
-  induction e1 ; destruct e2 ; simpl in * ;
-    intros s H ; try inverts_in_regex ;
-      eauto ; try solve [ econstructor ; eauto ;
-                          rewrite str_append_nil_end ; eauto ].
-  assert (Hx : String a (s0 ++ s') = (String a (s0 ++ s')) ++ "").
-     rewrite str_append_nil_end ; auto.
-  rewrite Hx.   
-  apply InCat with (s := String a (s0 ++ s'))(s' := "") ; auto.
-  eapply InStarRight ; eauto.
+  induction e1 ; destruct e2 ; intros s H ; inverts* H ;
+    try solve [econstructor ; eauto ; try rewrite* str_append_nil_end]
+      || (try apply InCat with (s := String a (s0 ++ s'))(s' := "") ; eauto ;
+         try rewrite* str_append_nil_end).
 Qed.  
 
 Lemma cat_smart_complete : forall e1 e2 s, s <<- (e1 @ e2) -> s <<- (e1 :@: e2).

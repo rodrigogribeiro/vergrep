@@ -8,82 +8,6 @@ Require Import
         List
         ListSet.
 
-Section LISTSET.
-
-  Definition empty := empty_set regex.
-
-  Definition singleton e := set_add regex_eq_dec e empty.
-
-  Definition union := set_union regex_eq_dec.
-
-  Lemma union_nil_l
-    : forall x l
-    , In x (union nil l) <-> In x l.
-  Proof.
-    intros x l ; splits ; intro H.
-    +
-      induction l ; simpl in *.
-      -
-        contradiction.
-      -
-        destruct (regex_eq_dec a x).
-        *
-          left*.
-        *
-          right*.
-          apply IHl.
-          eapply set_add_elim2 ; eauto.
-    +
-      apply set_union_intro2 ; auto.
-  Qed.
-  
-  Lemma set_exists__union
-    : forall l l' P
-    , Exists P (union l l') <->
-      Exists P l \/ Exists P l'.
-  Proof.
-    intros l l' P ; split ; intros H.
-    +
-      apply Exists_exists in H.
-      destruct H as [x [HIx HPx]].
-      unfold union in *.
-      apply set_union_elim in HIx.
-      destruct* HIx.
-      -
-        destruct l ; simpl in * ; try contradiction.
-        destruct H ; substs ; left*.
-        apply Exists_cons_tl ; auto.
-        assert (Ha : exists x, set_In x l /\ P x).
-          eexists ; splits*.
-        apply Exists_exists in Ha ; auto.
-      -
-        destruct l' ; simpl in * ; try contradiction.
-        destruct H ; substs ; right*.
-        assert (Ha : exists x, set_In x l' /\ P x).
-          eexists ; splits*.
-        apply Exists_exists in Ha ; auto.
-    +
-      inverts H.
-      -
-        apply Exists_exists in H0.
-        destruct H0 as [x [HIx HPx]].
-        apply Exists_exists ; eexists ; splits ; eauto.
-        apply set_union_intro1 ; auto.
-      -
-        apply Exists_exists in H0.
-        destruct H0 as [x [HIx HPx]].
-        apply Exists_exists ; eexists ; splits ; eauto.
-        apply set_union_intro2 ; auto.
-  Qed.
-
-  Lemma set_exists_map
-    : forall l P (f : regex -> regex)
-    , Exists P (map f l) ->
-      Exists (fun e => P (f e)) l.
-  Proof.
-    induction l ; intros P f H ; simpl in * ; inverts* H.
-  Qed.
-End LISTSET.  
 
 Fixpoint pderiv (a : ascii)(e : regex) : list regex :=
   match e with
@@ -109,8 +33,11 @@ Fixpoint pderiv (a : ascii)(e : regex) : list regex :=
      map (fun e' => e' @ (e1 ^*)) (pderiv a e1)
 end.
 
-Definition in_regex_set s es :=
-  Exists (fun e' => s <<- e') es. 
+Inductive in_regex_set : string -> list regex -> Prop :=
+| Here : forall s e es, s <<- e -> in_regex_set s (e :: es)
+| There : forall s e es, in_regex_set s es -> in_regex_set s (e :: es).
+
+Hint Constructors in_regex_set.
 
 Notation "s '<<<-' e" := (in_regex_set s e)(at level 40).
 
@@ -119,54 +46,16 @@ Theorem pderiv_sound
   ,  s <<<- (pderiv a e)
      -> (String a s) <<- e.
 Proof.
-  induction e ; intros a' s H ;
-    unfolds in_regex_set ; simpl in * ;
-      repeat (match goal with
-              | [H : Exists _ empty |- _] =>
-                inverts* H
-              | [H : Exists _ (singleton _) |- _] =>
-                inverts* H
-              | [H : Exists _ nil |- _] =>
-                inverts* H
-              | [H : _ \/ _ |- _] =>
-                inverts* H
-              | [H : Exists _ (union _ _) |- _] =>
-                apply set_exists__union in H
-              | [H : Exists _ (map _ _) |- _] =>
-                apply set_exists_map in H
-              | [H : _ <<- #1 |- _] =>
-                inverts* H
-              | [H : context[if ?E then _ else _] |- _] =>
-                  destruct* E
-              end ; substs ; eauto).
-  +
-    apply Exists_exists in H0.
-    destruct H0 as [x [HIx Hsx]].
-    inverts* Hsx.
-    rewrite str_append_rewind.
-    clear i.
-    econstructor ; eauto.
-    apply IHe1.
-    apply Exists_exists.
-    eexists ; eauto.
-  +
-    apply Exists_exists in H.
-    destruct H as [x [HIx Hsx]].
-    inverts* Hsx.
-    rewrite str_append_rewind.
-    econstructor ; eauto.
-    apply IHe1.
-    apply Exists_exists.
-    eexists ; eauto.
-  +
-    apply Exists_exists in H.
-    destruct H as [x [HIx Hsx]].
-    inverts* Hsx.
-    rewrite str_append_rewind.
-    apply InStarRight with (a := a')(s := s0)(s' := s') ; auto.
-    apply IHe.
-    apply Exists_exists.
-    eexists ; eauto.
+  induction e ; intros a' s H ; simpl in * ;
+    repeat (
+        match goal with
+        | [H : _ <<<- empty |- _] => inverts* H
+        | [H : _ <<<- singleton #1 |- _] => inverts* H
+        | [H : _ <<- #1 |- _] => inverts* H
+        | [H : _ <<<- nil |- _] => inverts* H                                    
+        | [H : context[if ?E then _ else _] |- _] =>
+          destruct* E ; substs                             
+        end ; eauto).        
 Qed.
 
 Theorem pderiv_complete
@@ -227,13 +116,17 @@ Proof.
     apply in_map with (f := fun e' => e' @ (e ^*)) ; auto.
 Qed.
 
-
 Fixpoint antimirov' (s : string)(e : list regex) : list regex :=
   match s with
   | "" => e
   | String a s' =>
     antimirov' s' (flat_map (pderiv a) e)
   end.
+
+Lemma antimirov'_nil : forall s, antimirov' s nil = nil.
+Proof.
+  induction s ; simpl in * ; auto.
+Qed.  
 
 Definition antimirov s e := antimirov' s (e :: nil).
 
@@ -244,4 +137,12 @@ Lemma antimirov'_sound
 Proof.
   induction s ; intros e H ; simpl in * ; auto.
   +
-    
+    apply Exists_exists in H.
+    destruct H as [x [HIx Hsx]].
+    remember (flat_map (pderiv a) e) as L.
+    destruct L ; simpl in *.
+    *
+      rewrite antimirov'_nil in HIx.
+      simpl in * ; contradiction.
+    *  
+      induction e ; simpl in * ; try congruence.
