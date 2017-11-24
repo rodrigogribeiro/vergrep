@@ -2,6 +2,7 @@
 
 Tactics/LibTactics.v
 Syntax/Regex.v
+Syntax/RegexOT.v
 Derivatives/Smart.v
 Derivatives/Brzozowski.v
 Derivatives/Antimirov.v

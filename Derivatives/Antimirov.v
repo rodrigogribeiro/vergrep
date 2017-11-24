@@ -5,8 +5,7 @@ Set Implicit Arguments.
 Require Import
         Syntax.Regex
         Tactics.LibTactics
-        List
-        ListSet.
+        List.
 
 
 Fixpoint pderiv (a : ascii)(e : regex) : list regex :=
