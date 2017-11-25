@@ -32,10 +32,14 @@ Module RegexOT <: OrderedType.
   | Chr_cat_lt : forall c e e', lt_regex ($ c) (e @ e')
   | Chr_choice_lt : forall c e e', lt_regex ($ c) (e :+: e')
   | Chr_star_lt : forall c e, lt_regex ($ c) (e ^*)
+  | Cat_cat_ltr : forall e1 e2 e2', lt_regex e2 e2' ->
+                               lt_regex (e1 @ e2) (e1 @ e2')
   | Cat_cat_ltl : forall e1 e2 e1' e2', lt_regex e1 e1' ->
                                    lt_regex (e1 @ e2) (e1' @ e2')
   | Cat_choice_lt : forall e1 e2 e1' e2', lt_regex (e1 @ e2) (e1' :+: e2')
   | Cat_star_lt   : forall e1 e2 e, lt_regex (e1 @ e2) (e ^*)
+  | Choice_choice_ltr : forall e1 e2 e2', lt_regex e2 e2' ->
+                               lt_regex (e1 :+: e2) (e1 :+: e2')
   | Choice_choice_lt : forall e1 e2 e1' e2', lt_regex e1 e1' ->
                                         lt_regex (e1 :+: e2) (e1' :+: e2')
   | Choice_star_lt : forall e1 e2 e, lt_regex (e1 :+: e2) (e ^*)
@@ -51,8 +55,8 @@ Module RegexOT <: OrderedType.
     Hint Resolve AsciiOT.lt_trans.
     intros e e' e'' H ; generalize dependent e'' ; induction H ;
       intros e22 He22 ; inverts* He22 ; try solve [econstructor ; eauto] ;
-        try (lets J: IHlt_regex H3 ; econstructor ; eauto) ;
-          try (lets J: IHlt_regex H1 ; econstructor ; eauto).
+        try solve [lets J: IHlt_regex H3 ; econstructor ; eauto] ;
+          try solve [lets J: IHlt_regex H1 ; econstructor ; eauto ].
   Qed.
 
   Lemma lt_regex_not_eq
@@ -105,9 +109,36 @@ Module RegexOT <: OrderedType.
                  apply GT ; auto
               | [|- Compare _ _ (_ ^*) (_ :+: _)] =>
                  apply GT ; auto
+              | [|- Compare _ _ ($ ?a) ($ ?a0)] =>
+                destruct (AsciiOT.compare a a0) ;
+                [ apply LT | apply EQ ; unfolds ; fequals* | apply GT ] ; auto
               end).
-    +
-      apply EQ ; unfolds ; auto.
-    +
-      apply LT ; auto.
+              +  
+                 lets J : IHe1 e'1 ; 
+                 lets K : IHe2 e'2 ; 
+                 destruct* J ; destruct* K ;
+                   try solve [apply LT ; auto] ;
+                   try solve [apply GT ; auto ] ;
+                   unfold eq in * ; substs*.
+                 econstructor ; eauto.
+                 apply EQ ; auto.
+                 apply GT ; econstructor ; eauto.
+              +
+                
+                lets J : IHe1 e'1 ;
+                  lets K : IHe2 e'2 ;
+                  destruct* J ; destruct* K ; unfold eq in * ;
+                    substs * ; try solve [apply EQ ; auto] ;
+                    try solve [apply LT ; auto] ; 
+                    try solve [apply GT ; auto].
+              +
+                lets J : IHe e'.
+                destruct J.
+                apply LT ; auto.
+                unfold eq in * ; apply EQ ; substs*.
+                apply GT ; auto.
+     Defined.
+
+     Definition lt_trans := lt_regex_trans.
+     Definition lt_not_eq := lt_regex_not_eq.
 End RegexOT.
