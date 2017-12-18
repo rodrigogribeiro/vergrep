@@ -2,7 +2,8 @@ Set Implicit Arguments.
 
 Require Import
         Ascii
-        NArith
+        NArith.
+Require Export 
         Structures.OrderedType.
 
 Module AsciiOT <: OrderedType.
@@ -39,7 +40,6 @@ Module AsciiOT <: OrderedType.
         | apply LT
         | apply GT; apply N.gt_lt];
         assumption.
-  Qed.
-
+  Defined.
 End AsciiOT.
 

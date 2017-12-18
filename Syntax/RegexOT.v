@@ -3,12 +3,10 @@ Set Implicit Arguments.
 Require Import
         Syntax.Regex
         Utils.AsciiOT
-        Structures.OrderedType.
+        Structures.Orders.
 
 
-Print AsciiOT.
-
-Module RegexOT <: OrderedType.
+Module RegexOT <: Orders.OrderedType.
   Definition t := regex.
 
   Definition eq := @eq regex.
@@ -65,80 +63,259 @@ Module RegexOT <: OrderedType.
     Hint Resolve AsciiOT.lt_not_eq.
     intros e e' H contra ; induction H ;
       try congruence ; inverts* contra ; inverts* H.
-    Search N.compare.
     destruct (N.compare_lt_iff (N_of_ascii c') (N_of_ascii c')).
     apply H in H1.
     apply N.lt_irrefl in H1. auto.
   Qed.
 
-  Lemma compare : forall (e e' : regex), Compare lt_regex eq e e'.
-  Proof.
-    induction e ; destruct e' ;
-      repeat (match goal with
-              | [|- Compare _ _ ?e ?e ] =>
-                apply EQ ; unfolds ; auto
-              | [|- Compare _ _ #0 _] =>
-                apply LT ; auto
-              | [|- Compare _ _ _ #0] =>
-                apply GT ; auto
-              | [|- Compare _ _ #1 _] =>
-                apply LT ; auto
-              | [|- Compare _ _ _ #1] =>
-                apply GT ; auto
-              | [|- Compare _ _ ($ _) (_ @ _)] =>
-                apply LT ; auto
-              | [|- Compare _ _ ($ _) (_ :+: _)] =>
-                apply LT ; auto
-              | [|- Compare _ _ ($ _) (_ ^*)] =>
-                 apply LT ; auto
-              | [|- Compare _ _ (_ @ _) ($ _)] =>
-                apply GT ; auto
-              | [|- Compare _ _ (_ @ _) (_ :+: _)] =>
-                 apply LT ; auto
-              | [|- Compare _ _ (_ @ _) (_ ^*)] =>
-                 apply LT ; auto
-              | [|- Compare _ _ (_ :+: _) ($ _)] =>
-                apply GT ; auto
-              | [|- Compare _ _ (_ :+: _) (_ @ _)] =>
-                apply GT ; auto
-              | [|- Compare _ _ (_ :+: _) (_ ^*)] =>
-                 apply LT ; auto
-              | [|- Compare _ _ (_ ^*) ($ _)] =>
-                 apply GT ; auto
-              | [|- Compare _ _ (_ ^*) (_ @ _)] =>
-                 apply GT ; auto
-              | [|- Compare _ _ (_ ^*) (_ :+: _)] =>
-                 apply GT ; auto
-              | [|- Compare _ _ ($ ?a) ($ ?a0)] =>
-                destruct (AsciiOT.compare a a0) ;
-                [ apply LT | apply EQ ; unfolds ; fequals* | apply GT ] ; auto
-              end).
-              +  
-                 lets J : IHe1 e'1 ; 
-                 lets K : IHe2 e'2 ; 
-                 destruct* J ; destruct* K ;
-                   try solve [apply LT ; auto] ;
-                   try solve [apply GT ; auto ] ;
-                   unfold eq in * ; substs*.
-                 econstructor ; eauto.
-                 apply EQ ; auto.
-                 apply GT ; econstructor ; eauto.
-              +
-                
-                lets J : IHe1 e'1 ;
-                  lets K : IHe2 e'2 ;
-                  destruct* J ; destruct* K ; unfold eq in * ;
-                    substs * ; try solve [apply EQ ; auto] ;
-                    try solve [apply LT ; auto] ; 
-                    try solve [apply GT ; auto].
-              +
-                lets J : IHe e'.
-                destruct J.
-                apply LT ; auto.
-                unfold eq in * ; apply EQ ; substs*.
-                apply GT ; auto.
-     Defined.
+  Fixpoint compare (e e' : regex) : comparison :=
+    match e,e' with
+    | #0 , #0 => Eq
+    | #0 , _  => Lt
+    | _  , #0 => Gt
+    | #1 , #1 => Eq
+    | #1 , _  => Lt
+    | _  , #1 => Gt
+    | $ a, $ b =>
+      match AsciiOT.compare a b with
+      | LT _ => Lt
+      | EQ _ => Eq
+      | GT _ => Gt
+      end
+    | $ _ , _ => Lt
+    | _   , $ _ => Gt
+    | e1 @ e2, e1' @ e2' =>
+      match compare e1 e1', compare e2 e2' with
+      | Lt , _  => Lt
+      | Eq , Lt => Lt
+      | Eq , Eq => Eq
+      | Eq , Gt => Gt
+      | Gt , _ => Gt
+      end
+    | _ @ _ , _ :+: _ => Lt
+    | _ @ _ , _ ^* => Lt
+    | _ :+: _ , _ @ _ => Gt
+    | _ ^* , _ @ _ => Gt
+    | e1 :+: e2, e1' :+: e2' =>
+      match compare e1 e1', compare e2 e2' with
+      | Lt , _  => Lt
+      | Eq , Lt => Lt
+      | Eq , Eq => Eq
+      | Eq , Gt => Gt
+      | Gt , _ => Gt
+      end
+    | _ :+: _, _ ^* => Lt
+    | _ ^* , _ :+: _ => Gt 
+    | e ^* , e' ^* => compare e e'
+    end.
 
-     Definition lt_trans := lt_regex_trans.
-     Definition lt_not_eq := lt_regex_not_eq.
+    Definition lt_trans := lt_regex_trans.
+    Definition lt_not_eq := lt_regex_not_eq.
+
+    Definition eq_equiv := Regex_as_DT.eq_equiv.
+    
+    Definition lt_strorder : StrictOrder lt.
+      split ; unfolds ; unfold lt, Reflexive, complement.
+      intros x H ; lets K : lt_not_eq x x H ; contradiction.
+      apply lt_trans.
+    Defined.
+
+    Definition lt_compat : Proper (eq==> eq ==> iff) lt.
+      split ; unfold eq, lt in * ; intros ; substs*.
+    Defined.
+
+    Lemma compare_refl : forall e, compare e e = Eq.
+    Proof.
+      induction e ; simpl ; auto ;
+        repeat (match goal with
+                | [|- context[match ?E with _=>_ end]] => destruct E
+                | [H : AsciiOT.lt ?a ?a |- _] =>
+                  apply AsciiOT.lt_not_eq in H ;
+                  unfold AsciiOT.eq in * ; try contradiction
+                end ; eauto) ; try congruence.
+    Defined.
+
+    Lemma compare_lt : forall e e', lt e e' -> compare e e'  = Lt.
+    Proof.
+      induction e ; intros e' H ; inverts* H ; simpl.
+      destruct (AsciiOT.compare a c') eqn:Heqn ; eauto.
+      unfold AsciiOT.lt, AsciiOT.eq in *.
+      subst. apply N.lt_irrefl in H1. contradiction.
+      lets J : N.lt_trans H1 l.
+      apply N.lt_irrefl in J ; contradiction.
+      rewrite compare_refl.
+      apply IHe2 in H3. rewrite H3 ; auto.
+      rewrite (IHe1 _ H3) ; auto.
+      rewrite compare_refl.
+      rewrite (IHe2 _ H3) ; auto.
+      rewrite (IHe1 _ H3) ; auto.
+    Qed.
+
+    Lemma compare_gt : forall e e', lt e' e -> compare e e' = Gt.
+    Proof.
+      induction e ; intros e' H ; inverts* H ; simpl.
+      +
+        destruct (AsciiOT.compare a c) eqn:Heqn ; eauto.
+        unfold AsciiOT.lt, AsciiOT.eq in *.
+        clear Heqn.
+        lets J : N.lt_trans H2 l.
+        apply N.lt_irrefl in J. contradiction.
+        clear Heqn.
+        unfold AsciiOT.lt, AsciiOT.eq in *.
+        subst.
+        lets J : N.lt_irrefl H2. contradiction.
+      +
+        rewrite compare_refl.
+        lets J : IHe2 H2.
+        rewrite J ; auto.
+      +
+        lets J : IHe1 H2.
+        rewrite J ; auto.
+      +
+        rewrite compare_refl.
+        lets J : IHe2 H2.
+        rewrite J ; auto.
+      +
+        lets J : IHe1 H2.
+        rewrite J ; auto.
+    Qed.
+
+    Definition compare_spec : forall e e', CompareSpec (eq e e')
+                                                  (lt e e')
+                                                  (lt e' e)
+                                                  (compare e e').
+      induction e ; intros e' ; destruct e' ;
+        unfold eq, lt in * ;
+          repeat (match goal with
+                  | [|- context[match ?E with _ => _ end]] =>
+                    destruct E ; unfold AsciiOT.eq in * ; substs
+                  | [|- context[CompareSpec (?e = ?e) _ _ _]] =>
+                    apply CompEq ; eauto
+                  | [|- context[CompareSpec (#0 = _) _ _ _]] =>
+                    apply CompLt ; eauto
+                  | [|- context[CompareSpec (_ = #0) _ _ _]] =>
+                    apply CompGt ; eauto
+                  | [|- context[CompareSpec (#1 = ?e) _ _ _]] =>
+                    apply CompLt ; eauto
+                  | [|- context[CompareSpec (?e = #1) _ _ _]] =>
+                    apply CompGt ; eauto
+                  | [|- context[CompareSpec ($ ?a = $ ?b) _ _ _]] =>
+                    simpl ; destruct (AsciiOT.compare a a0) ;
+                      unfold AsciiOT.eq in * ; 
+                       [ apply CompLt
+                       | apply CompEq
+                       | apply CompGt ] ; substs*
+                  | [|- context[CompareSpec ($ _ = _) _ _ _]] =>
+                    apply CompLt ; eauto
+                  | [|- context[CompareSpec (_ = $ _) _ _ _]] =>
+                    apply CompGt ; eauto
+                  | [|- context[CompareSpec ((_ @ _) = (_ :+: _)) _ _ _]] =>
+                    apply CompLt ; eauto
+                  | [|- context[CompareSpec ((_ :+: _) = (_ @ _)) _ _ _]] =>
+                    apply CompGt ; eauto
+                  | [|- context[CompareSpec ((_ @ _) = (_ ^*)) _ _ _]] =>
+                     apply CompLt ; eauto
+                  | [|- context[CompareSpec ((_ ^*) = (_ :+: _)) _ _ _]] =>
+                     apply CompGt ; eauto
+                  | [|- context[CompareSpec ((_ ^*) = (_ @ _)) _ _ _]] =>
+                     apply CompGt ; eauto
+                  | [|- context[CompareSpec ((_ :+: _) = (_ ^*)) _ _ _]] =>
+                    apply CompLt ; eauto
+                  end).
+      +
+        lets J: IHe1 e'1.
+        lets K: IHe2 e'2.
+        destruct J ; destruct K ; simpl in * ; substs.
+        rewrite compare_refl ; rewrite compare_refl ; eauto.
+        rewrite compare_refl.
+        apply compare_lt in H0.
+        rewrite H0.
+        lets K : IHe2 e'2.
+        apply CompLt ; eauto.
+        rewrite H0 in *.
+        inverts* K.
+        rewrite compare_refl.
+        apply compare_gt in H0.
+        rewrite H0.
+        lets J : IHe2 e'2.
+        rewrite H0 in J.
+        inverts* J.
+        apply compare_lt in H ; rewrite H.
+        lets J : IHe1 e'1. rewrite H in J.
+        inverts* J.
+        lets J : IHe1 e'1.
+        apply compare_lt in H.
+        rewrite H in *.
+        inverts* J.
+        lets J : IHe1 e'1.
+        apply compare_lt in H.
+        rewrite H in *.
+        inverts* J.
+        lets J : IHe1 e'1.
+        apply compare_gt in H.
+        rewrite H in *.
+        inverts* J.
+        lets J : IHe1 e'1.
+        apply compare_gt in H.
+        rewrite H in *.
+        inverts* J.
+        lets J : IHe1 e'1.
+        apply compare_gt in H.
+        rewrite H in *.
+        inverts* J.
+    +
+        lets J: IHe1 e'1.
+        lets K : IHe2 e'2.
+        destruct J ; destruct K ; simpl in * ; substs.
+        rewrite compare_refl ; rewrite compare_refl ; eauto.
+        rewrite compare_refl.
+        apply compare_lt in H0.
+        rewrite H0.
+        lets K : IHe2 e'2.
+        apply CompLt ; eauto.
+        rewrite H0 in *.
+        inverts* K.
+        rewrite compare_refl.
+        apply compare_gt in H0.
+        rewrite H0.
+        lets J : IHe2 e'2.
+        rewrite H0 in J.
+        inverts* J.
+        apply compare_lt in H ; rewrite H.
+        lets J : IHe1 e'1. rewrite H in J.
+        inverts* J.
+        lets J : IHe1 e'1.
+        apply compare_lt in H.
+        rewrite H in *.
+        inverts* J.
+        lets J : IHe1 e'1.
+        apply compare_lt in H.
+        rewrite H in *.
+        inverts* J.
+        lets J : IHe1 e'1.
+        apply compare_gt in H.
+        rewrite H in *.
+        inverts* J.
+        lets J : IHe1 e'1.
+        apply compare_gt in H.
+        rewrite H in *.
+        inverts* J.
+        lets J : IHe1 e'1.
+        apply compare_gt in H.
+        rewrite H in *.
+        inverts* J.
+     +    
+       lets J : IHe e'.
+       destruct J ; simpl ; substs.
+       rewrite compare_refl.
+       eauto.
+       apply compare_lt in H.
+       lets J : IHe e'.
+       rewrite H in *.
+       inverts* J.
+       lets J : IHe e'.
+       apply compare_gt in H.
+       rewrite H in *.
+       inverts* J.
+   Defined.
 End RegexOT.
