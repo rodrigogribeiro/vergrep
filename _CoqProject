@@ -5,6 +5,11 @@ Derivatives/Brzozowski.v
 Derivatives/Antimirov.v
 Parsing/Brzozowski.v
 Prefix/Prefix.v
+Prefix/PrefixBrzozowski.v
+Prefix/PrefixAntimirov.v
+Substring/Substring.v
+Substring/SubstringBrzozowski.v
+Substring/SubstringAntimirov.v
 Syntax/Regex.v
 Syntax/RegexOT.v
 Tactics/LibTactics.v
@@ -12,3 +17,4 @@ Tactics/Crush.v
 Tactics/Tactics.v
 Utils/AsciiOT.v
 Utils/StringOT.v
+Utils/Parser/Combinators.v

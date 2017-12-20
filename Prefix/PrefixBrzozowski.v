@@ -8,8 +8,9 @@ Require Import
 
 
 Definition brzozowski_prefix
-  : forall e s, {Prefix e s} + {~ Prefix e s}.
-  refine (fix brzozowski_prefix e s : {Prefix e s} + {~ Prefix e s} :=
+  : forall e s, {prefix e s} + {~ prefix e s}.
+  Hint Resolve empty_not_prefix cons_not_prefix_brzozowski.
+  refine (fix brzozowski_prefix e s : {prefix e s} + {~ prefix e s} :=
             match s with
             | EmptyString =>
               match null e with
@@ -17,8 +18,22 @@ Definition brzozowski_prefix
               | right _ => right _
               end
             | String a s' =>
-              match brzozowski_prefix (deriv a e) s' with
+              match null e with
               | left _ => left _
-              | right _ => right _
+              | right _ => 
+                match brzozowski_prefix (deriv a e) s' with
+                | left _ => left _
+                | right _ => _
+                end
               end
-            end) ; clear brzozowski_prefix ; crush.
+            end) ; clear brzozowski_prefix ;
+    try solve [econstructor ; eauto ; reflexivity].
+  +
+    intro H ; inverts* H.
+    apply empty_string_concat in H1.
+    destruct* H1. substs ; contradiction.
+  +
+    inverts* p.
+    eapply deriv_sound in H; eauto.
+    simpl in * ; econstructor ; eauto. reflexivity.
+Defined.
