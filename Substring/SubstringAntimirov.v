@@ -3,8 +3,8 @@ Set Implicit Arguments.
 Require Import
         String
         Syntax.Regex
-        Substring.Substring
-        Prefix.Prefix
+        Substring.SubstringDef
+        Prefix.PrefixDef
         Prefix.PrefixAntimirov
         Derivatives.Antimirov
         Tactics.Tactics.

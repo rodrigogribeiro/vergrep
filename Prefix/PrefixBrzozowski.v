@@ -3,7 +3,7 @@ Set Implicit Arguments.
 Require Import
         Syntax.Regex
         Derivatives.Brzozowski
-        Prefix.Prefix
+        Prefix.PrefixDef
         Tactics.Tactics.
 
 

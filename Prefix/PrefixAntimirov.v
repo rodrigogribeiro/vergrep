@@ -5,7 +5,7 @@ Require Import
         String
         Syntax.Regex
         Derivatives.Antimirov
-        Prefix.Prefix
+        Prefix.PrefixDef
         Tactics.Tactics.
 
 

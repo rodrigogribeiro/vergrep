@@ -3,9 +3,9 @@ Set Implicit Arguments.
 Require Import
         Syntax.Regex
         Derivatives.Brzozowski
-        Prefix.Prefix
+        Prefix.PrefixDef
         Prefix.PrefixBrzozowski
-        Substring.Substring
+        Substring.SubstringDef
         Tactics.Tactics.
 
 
