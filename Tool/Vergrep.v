@@ -41,20 +41,18 @@ Definition choose (op : options)(e : regex)(xs : string)
   | Brzozowski => brzozowski_substring e xs
   end.
 
+Definition show_result e xs : substring e xs -> IO unit :=
+  fun _ => putStrLn xs.
+
+Definition result e xs (p : {substring e xs} + {~ substring e xs}) : IO unit :=
+  match p with
+  | left s => show_result s
+  | right _ => ret tt
+  end.
 
 (** main driver for the vergrep tool *)
 
 (*
-  showResult : ∀ {xs e} → IsSubstring xs e → IO ⊤
-  showResult (Substring ys zs ws _ _)
-    = putStrLn ("\nLine:" Str.++ xs' Str.++ " matches: " Str.++ zs')
-      where
-         xs' = Str.fromList (ys List.++ zs List.++ ws)
-         zs' = Str.fromList zs
-
-  result : ∀ {xs e} → Dec (IsSubstring xs e) → IO ⊤
-  result (yes pr) = showResult pr
-  result (no _)   = return tt
 
   verigrep : Options → Regex → List String → IO ⊤
   verigrep opt r [] = return tt
