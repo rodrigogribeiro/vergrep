@@ -12,6 +12,8 @@ Section IODEF.
   Axiom bindIO : forall {A B : Type}, IO A -> (A -> IO B) -> IO B.
 
   Axiom putStrLn : string -> IO unit.
+
+  Axiom readFile : string -> IO string.
 End IODEF.
 
 Instance monadIO : Monad IO :=

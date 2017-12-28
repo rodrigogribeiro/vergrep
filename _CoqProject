@@ -23,5 +23,7 @@ Utils/RegexParser.v
 Utils/Bridge/Parsec.v
 Utils/Bridge/IO.v
 Utils/Classes/Monad.v
+Utils/Classes/Functor.v
+Utils/Classes/Applicative.v
 Utils/Functions/Functions.v
 Utils/Utils.v

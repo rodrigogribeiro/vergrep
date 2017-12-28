@@ -50,6 +50,14 @@ Definition result e xs (p : {substring e xs} + {~ substring e xs}) : IO unit :=
   | right _ => ret tt
   end.
 
+Fixpoint vergrep (opt : options)(e : regex)(xs : list string) : IO unit :=
+  match xs with
+  | [] => ret tt
+  | (f :: fs) =>
+    readFile f >>=
+      (fun c => mapM 
+  end.
+
 (** main driver for the vergrep tool *)
 
 (*
