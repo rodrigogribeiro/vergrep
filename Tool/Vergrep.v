@@ -33,21 +33,23 @@ Definition is_newline (c : ascii) :=
 
 Definition lines : string -> list string :=
   map to_string :@: break_on is_newline :@: from_string.
-  
-Definition choose (op : options)(e : regex)(xs : string)
-  : {substring e xs} + {~ substring e xs} :=
-  match alg op with
-  | Antimirov  => antimirov_substring e xs
-  | Brzozowski => brzozowski_substring e xs
-  end.
 
 Definition show_result e xs : substring e xs -> IO unit :=
   fun _ => putStrLn xs.
 
-Definition result e xs (p : {substring e xs} + {~ substring e xs}) : IO unit :=
-  match p with
-  | left s => show_result s
-  | right _ => ret tt
+Definition choose (op : options)(e : regex)(xs : string)
+  : IO unit :=
+  match alg op with
+  | Antimirov  =>
+    match antimirov_substring e xs with
+    | left s => show_result s
+    | right _ => ret tt 
+    end
+  | Brzozowski =>
+    match brzozowski_substring e xs with
+    | left s => show_result s
+    | right _ => ret tt 
+    end
   end.
 
 Fixpoint vergrep (opt : options)(e : regex)(xs : list string) : IO unit :=
@@ -55,33 +57,26 @@ Fixpoint vergrep (opt : options)(e : regex)(xs : list string) : IO unit :=
   | [] => ret tt
   | (f :: fs) =>
     readFile f >>=
-      (fun c => mapM 
+      (fun c => mapM_ unit (choose opt e) (lines c)) >>=
+      (fun _ => vergrep opt e fs)
   end.
 
-(** main driver for the vergrep tool *)
+Definition parse_regex_and_run (opt : options) : IO unit :=
+  match regexp opt with
+  | None => putStrLn usage
+  | Some s =>
+    match pexp (from_string s) with
+    | [] => putStrLn "parser error!"
+    | ((e,_) :: _) => vergrep opt e (files opt)
+    end
+  end.
 
-(*
-
-  verigrep : Options → Regex → List String → IO ⊤
-  verigrep opt r [] = return tt
-  verigrep opt r (f ∷ fs)
-    = ♯  IO.readFiniteFile f          >>= λ c → 
-         ♯ (♯ (IO.mapM′ (result ∘ choose opt r ∘ Str.toList)
-                 $ Colist.fromList (lines c))
-            >> (♯ verigrep opt r fs))
-
-  main : _
-  main = IO.run $
-           ♯ getArgs
-           >>= λ args →
-              ♯ let opt = parseOptions args in
-                  if version opt
-                  then putStrLn versionInfo
-                  else if help opt
-                       then putStrLn usage
-                       else case Maybe.map (pExp ∘ toList) (regex opt) of λ{
-                                 nothing                 → putStrLn usage
-                              ;  (just [])               → putStrLn usage 
-                              ;  (just (( e , _) ∷ _))   → verigrep opt e (files opt)
-                              }   
-                      *)  
+Definition main : IO unit :=
+  get_args >>=
+     (fun args =>
+        let opt := parse_options args
+        in if version opt
+           then putStrLn version_info
+           else if help opt
+                then putStrLn usage
+                else parse_regex_and_run opt).

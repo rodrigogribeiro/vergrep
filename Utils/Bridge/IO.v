@@ -14,6 +14,8 @@ Section IODEF.
   Axiom putStrLn : string -> IO unit.
 
   Axiom readFile : string -> IO string.
+
+  Axiom get_args : IO (list string).
 End IODEF.
 
 Instance monadIO : Monad IO :=
