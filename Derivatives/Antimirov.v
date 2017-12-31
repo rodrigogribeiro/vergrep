@@ -23,12 +23,10 @@ Fixpoint pderiv (a : ascii)(e : regex) : regexes :=
     | right _ => []                      
     end
   | (e1 @ e2) =>
-    match null e1 with
-    | left _ =>
+    if null e1 then
       (pderiv a e2) ++ (bigcat(pderiv a e1) e2)
-    | right _ =>
+    else
       bigcat (pderiv a e1) e2
-    end
   | (e1 :+: e2) =>
       (pderiv a e1) ++ (pderiv a e2)
   | (e1 ^*) =>
@@ -157,11 +155,20 @@ Proof.
   induction e ;  intros a' s es Heq Hin ; substs ; simpl in * ;
     repeat (match goal with
             | [H : _ <<<- [] |- _] => apply in_set_empty in H ; elim H
-            | [H : context[if ?E then _ else _] |- _] =>
-              destruct* E ; substs
             | [H : _ <<<- [#1] |- _] => apply in_set_eps_singleton in H ; substs
             end ; eauto).
   +
+    destruct* (ascii_dec a' a).
+    inverts* Hin.
+    inverts* H0. substs*.
+    substs*. inverts* H0.
+    inverts* Hin.
+  +
+    remember (null e1) as NN ; destruct* NN.
+    symmetry in HeqNN.
+    assert (Hn : "" <<- e1).
+    apply null_sound.
+    unfolds ; rewrite HeqNN ; auto.
     apply in_append in Hin.
     destruct* Hin.
     apply bigcat_in in H.
@@ -171,12 +178,10 @@ Proof.
     lets J : IHe1 Hex ; eauto.
     econstructor ; eauto.
     rewrite Heq ; auto.
-  +
     apply bigcat_in in Hin.
-    destruct Hin as [s1 [s2 [x [Hex [Hsx [Hs2 Heq]]]]]].
-    assert (Hex1 : s1 <<<- pderiv a' e1) by
-        (eapply in_set_cons ; eauto).
-    lets J : IHe1 Hex1 ; eauto.
+    destruct* Hin as [s1 [s2 [e' [Hin [Hs1 [Hs2 Heq]]]]]].
+    assert (Hex : s1 <<<- pderiv a' e1) by (eapply in_set_cons ; eauto).
+    lets J : IHe1 Hex ; eauto.
     econstructor ; eauto.
     rewrite Heq ; auto.
   +
@@ -221,28 +226,41 @@ Proof.
     unfolds ; apply Exists_cons_hd ; auto.
     contradiction.
   +
-    destruct s0 ; simpl in * ; destruct (null e1) ; try contradiction.
+    destruct s0 ; simpl in * ; substs.
     -
-      substs.
-      lets* J : IHe2 H4 s a' (eq_refl (String a' s)).
-      eapply in_append_left ; eauto.
+      remember (null e1) as N ; destruct N.
+      apply in_append. left*.
+      apply null_complete in H2.
+      unfolds in H2.
+      rewrite <- HeqN in H2.
+      contradiction.
     -
-      injects H0.
-      lets* J : IHe1 H2 s0 a (eq_refl (String a s0)).
-      eapply in_append_right ; eauto.
-      eapply in_bigcat ; eauto.
-    -
-      injects H0.
+      injects* H0.
+      remember (null e1) as N ; destruct N.
+      apply in_append.
       lets J : IHe1 H2 s0 a (eq_refl (String a s0)).
-      eapply in_bigcat ; eauto.
+      right*.
+      apply in_bigcat ; auto.
+      lets J : IHe1 H2 s0 a (eq_refl (String a s0)).
+      apply in_bigcat ; auto.
   +
-    lets* J : IHe1 H2 s a' Heq.
-    simpl. eapply in_append_left ; eauto.
+    destruct s' ; simpl in * ; substs.
+    try discriminate.
+    injects Heq.
+    lets J : IHe1 H2 s a' (eq_refl (String a' s)).
+    apply in_append. left*.
   +
-    lets* J : IHe2 H2 s a' Heq.
-    simpl ; eapply in_append_right ; eauto.
+    destruct s' ; simpl in * ; substs.
+    try discriminate.
+    injects Heq.
+    lets J : IHe2 H2 s a' (eq_refl (String a' s)).
+    apply in_append. right*.
   +
-    injects H0. simpl.
+    injects H0.
     lets J : IHe H1 s0 a (eq_refl (String a s0)).
+    unfolds. simpl.
+    assert ((s0 ++ s'0) <<<- (bigcat (pderiv a e) (e ^*))).
     apply in_bigcat ; eauto.
+    auto.
 Qed.
+

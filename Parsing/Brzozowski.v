@@ -27,11 +27,6 @@ Proof.
             (** lambda *)             
             | [H : _ <<- #1 |- _] =>
               inverts* H
-            (** breaking the conditionals *)             
-            | [H : context[if ?E then _ else _] |- _] =>
-              destruct* E
-            | [|- context[if ?E then _ else _]] =>
-              destruct* E
             (** character *)              
             | [H : _ <<- ($ _) |- _] =>
               inverts* H
@@ -69,11 +64,6 @@ Proof.
             (* lambda *)             
             | [H : _ <<- #1 |- _] =>
               inverts* H
-            (* conditionals *)
-            | [H : context[if ?E then _ else _] |- _] =>
-              destruct* E
-            | [|- context[if ?E then _ else _]] =>
-              destruct* E
             (* characters *)              
             | [H : _ <<- ($ _) |- _] =>
               inverts* H
@@ -101,5 +91,22 @@ Proof.
             (* star *)
             | [H : (String _ _) <<- (_ ^*) |- _] => inverts* H
             | [H : String _ _ = String _ _ |- _] => inverts* H
-            end ; substs* ; eauto) ; eauto.
+               end ; substs* ; eauto) ; eauto.
+  +
+    destruct (ascii_dec a0 a0) eqn:Heqn ; auto.
+    contradiction.
+  +
+    destruct (null e1) eqn :Heqn.
+    apply choice_smart_complete.
+    destruct s0 ; simpl in * ; substs.
+    apply deriv_complete in H4. auto.
+    injects H5. apply deriv_complete in H2.
+    apply InLeft. apply cat_smart_complete.
+    eapply InCat ; eauto.
+    destruct s0 ; simpl in * ; substs.
+    apply null_complete in H2. unfolds in H2.
+    rewrite Heqn in H2. contradiction.
+    injects H5. apply cat_smart_complete.
+    apply deriv_complete in H2.
+    eapply InCat ; eauto.
 Qed.    

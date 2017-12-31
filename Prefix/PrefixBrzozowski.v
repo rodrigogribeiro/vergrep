@@ -7,6 +7,14 @@ Require Import
         Tactics.Tactics.
 
 
+Fixpoint brzozowski_prefix (e : regex)(s : string) : bool :=
+  match s with
+  | EmptyString => null e
+  | String a' s' =>
+    orb (null e) (brzozowski_prefix e s')
+  end.
+
+
 Definition brzozowski_prefix
   : forall e s, {prefix e s} + {~ prefix e s}.
   Hint Resolve empty_not_prefix cons_not_prefix_brzozowski.

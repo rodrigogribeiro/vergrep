@@ -1,0 +1,242 @@
+
+==================== FINAL INTERFACE ====================
+2017-12-30 18:23:56.03145 UTC
+
+interface main:Ascii 8022
+  interface hash: 2f57743a5ab25d206a4b5bf634d45aa1
+  ABI hash: 553b86cd1332eb3c651bfa05effd9565
+  export-list hash: 618f0c35a35730d2b8c00aacec2d01d3
+  orphan hash: 693e9af84d3dfcc71e640e005bdc5e2e
+  flag hash: 070ecf0bbcbbbb93370072c3b472ea02
+  sig of: Nothing
+  used TH splices: False
+  where
+exports:
+  Ascii.ascii_dec
+  Ascii.ascii_rec
+  Ascii.ascii_rect
+  Ascii.Coq_ascii{Ascii.Ascii}
+module dependencies: Bool Datatypes Specif
+package dependencies: base-4.10.1.0* ghc-prim-0.5.1.1
+                      integer-gmp-1.0.1.0
+orphans: base-4.10.1.0:GHC.Float base-4.10.1.0:GHC.Base
+family instance modules: base-4.10.1.0:Control.Applicative
+                         base-4.10.1.0:Data.Either base-4.10.1.0:Data.Functor.Const
+                         base-4.10.1.0:Data.Functor.Identity base-4.10.1.0:Data.Monoid
+                         base-4.10.1.0:Data.Type.Equality base-4.10.1.0:GHC.Generics
+                         base-4.10.1.0:GHC.IO.Exception base-4.10.1.0:GHC.TypeLits
+                         base-4.10.1.0:GHC.TypeNats
+import  -/  base-4.10.1.0:Prelude 31945b7d0084063347fc52506d3a4020
+import  -/  Bool 7f49639da31bf68d84891fbb72f4329f
+  exports: 8d5fa99d6f80f6f1806167355128b5e0
+  bool_dec e4c8a815c2a35d06b88203055844cadf
+import  -/  Specif 81b3653087b326c5102e7e0ccd2d0a5e
+  exports: 7f6ea6cadebb80a142d41294552dd2e6
+  sumbool_rec 2b66507dfd6173697814a0ff72276170
+c1cc753d5a88370a14846f2ad97830f8
+  $tc'Ascii :: GHC.Types.TyCon
+  {- HasNoCafRefs, Strictness: m,
+     Unfolding: (GHC.Types.TyCon
+                   11566665704659399154##
+                   13298336542140450438##
+                   Ascii.$trModule
+                   Ascii.$tc'Ascii2
+                   0#
+                   Ascii.$tc'Ascii1) -}
+68798ab0974e52d7e27f35bcfac9e281
+  $tc'Ascii1 :: GHC.Types.KindRep
+  {- HasNoCafRefs, Strictness: m4, Inline: [~] -}
+5c4c3759d3a4361c4ff78517c2f3f457
+  $tc'Ascii2 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS Ascii.$tc'Ascii3) -}
+aa6f04705d0b6bbc5d83d7837886eada
+  $tc'Ascii3 :: GHC.Prim.Addr#
+  {- HasNoCafRefs, Unfolding: ("'Ascii"#) -}
+bafe61913664af4671d333d70a88077f
+  $tcCoq_ascii :: GHC.Types.TyCon
+  {- HasNoCafRefs, Strictness: m,
+     Unfolding: (GHC.Types.TyCon
+                   17307035234867825543##
+                   17846951989241555499##
+                   Ascii.$trModule
+                   Ascii.$tcCoq_ascii1
+                   0#
+                   GHC.Types.krep$*) -}
+4a3b708e2461c278b6d0610917a86747
+  $tcCoq_ascii1 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS Ascii.$tcCoq_ascii2) -}
+ba8875292028b5c347ca848c1e488966
+  $tcCoq_ascii2 :: GHC.Prim.Addr#
+  {- HasNoCafRefs, Unfolding: ("Coq_ascii"#) -}
+9acd7c5972b861ff9c13c3cd2caf288f
+  $trModule :: GHC.Types.Module
+  {- HasNoCafRefs, Strictness: m,
+     Unfolding: (GHC.Types.Module Ascii.$trModule3 Ascii.$trModule1) -}
+ebcd50aa4b1605c2a7594e04920326a4
+  $trModule1 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS Ascii.$trModule2) -}
+9a5a3031fe5ee4fa09320c73b4577c7b
+  $trModule2 :: GHC.Prim.Addr#
+  {- HasNoCafRefs, Unfolding: ("Ascii"#) -}
+6ba0de7303da87c221dd136b0713b719
+  $trModule3 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS Ascii.$trModule4) -}
+2885335497b87e4b91980fbd95159156
+  $trModule4 :: GHC.Prim.Addr#
+  {- HasNoCafRefs, Unfolding: ("main"#) -}
+28cc8d7d4b8e85103cef1b726c964de4
+  data Coq_ascii
+    = Ascii GHC.Types.Bool
+            GHC.Types.Bool
+            GHC.Types.Bool
+            GHC.Types.Bool
+            GHC.Types.Bool
+            GHC.Types.Bool
+            GHC.Types.Bool
+            GHC.Types.Bool
+482fd4d11f9b1afa12a6c959e67acc00
+  ascii_dec :: Ascii.Coq_ascii -> Ascii.Coq_ascii -> GHC.Types.Bool
+  {- Arity: 2, HasNoCafRefs,
+     Strictness: <S(SLLLLLLL),1*U(1*U,1*U,1*U,1*U,1*U,1*U,1*U,1*U)><S(SLLLLLLL),1*U(1*U,1*U,1*U,1*U,1*U,1*U,1*U,1*U)>,
+     Unfolding: (\ (a :: Ascii.Coq_ascii) (b :: Ascii.Coq_ascii) ->
+                 case a of wild { Ascii.Ascii x x0 x1 x2 x3 x4 x5 x6 ->
+                 case b of wild1 { Ascii.Ascii b8 b9 b10 b11 b12 b13 b14 b15 ->
+                 let {
+                   $j :: GHC.Types.Bool <join 0>
+                   = let {
+                       $j1 :: GHC.Types.Bool <join 0>
+                       = let {
+                           $j2 :: GHC.Types.Bool <join 0>
+                           = let {
+                               $j3 :: GHC.Types.Bool <join 0>
+                               = let {
+                                   $j4 :: GHC.Types.Bool <join 0>
+                                   = let {
+                                       $j5 :: GHC.Types.Bool <join 0>
+                                       = case x5 of wild2 {
+                                           GHC.Types.False
+                                           -> case b14 of wild3 {
+                                                GHC.Types.False
+                                                -> case x6 of wild4 {
+                                                     GHC.Types.False
+                                                     -> case b15 of wild5 {
+                                                          GHC.Types.False -> GHC.Types.True
+                                                          GHC.Types.True -> GHC.Types.False }
+                                                     GHC.Types.True -> b15 }
+                                                GHC.Types.True -> GHC.Types.False }
+                                           GHC.Types.True
+                                           -> case b14 of wild3 {
+                                                GHC.Types.False -> GHC.Types.False
+                                                GHC.Types.True
+                                                -> case x6 of wild4 {
+                                                     GHC.Types.False
+                                                     -> case b15 of wild5 {
+                                                          GHC.Types.False -> GHC.Types.True
+                                                          GHC.Types.True -> GHC.Types.False }
+                                                     GHC.Types.True -> b15 } } }
+                                     } in
+                                     case x4 of wild2 {
+                                       GHC.Types.False
+                                       -> case b13 of wild3 {
+                                            GHC.Types.False -> $j5
+                                            GHC.Types.True -> GHC.Types.False }
+                                       GHC.Types.True
+                                       -> case b13 of wild3 {
+                                            GHC.Types.False -> GHC.Types.False
+                                            GHC.Types.True -> $j5 } }
+                                 } in
+                                 case x3 of wild2 {
+                                   GHC.Types.False
+                                   -> case b12 of wild3 {
+                                        GHC.Types.False -> $j4 GHC.Types.True -> GHC.Types.False }
+                                   GHC.Types.True
+                                   -> case b12 of wild3 {
+                                        GHC.Types.False -> GHC.Types.False GHC.Types.True -> $j4 } }
+                             } in
+                             case x2 of wild2 {
+                               GHC.Types.False
+                               -> case b11 of wild3 {
+                                    GHC.Types.False -> $j3 GHC.Types.True -> GHC.Types.False }
+                               GHC.Types.True
+                               -> case b11 of wild3 {
+                                    GHC.Types.False -> GHC.Types.False GHC.Types.True -> $j3 } }
+                         } in
+                         case x1 of wild2 {
+                           GHC.Types.False
+                           -> case b10 of wild3 {
+                                GHC.Types.False -> $j2 GHC.Types.True -> GHC.Types.False }
+                           GHC.Types.True
+                           -> case b10 of wild3 {
+                                GHC.Types.False -> GHC.Types.False GHC.Types.True -> $j2 } }
+                     } in
+                     case x0 of wild2 {
+                       GHC.Types.False
+                       -> case b9 of wild3 {
+                            GHC.Types.False -> $j1 GHC.Types.True -> GHC.Types.False }
+                       GHC.Types.True
+                       -> case b9 of wild3 {
+                            GHC.Types.False -> GHC.Types.False GHC.Types.True -> $j1 } }
+                 } in
+                 case x of wild2 {
+                   GHC.Types.False
+                   -> case b8 of wild3 {
+                        GHC.Types.False -> $j GHC.Types.True -> GHC.Types.False }
+                   GHC.Types.True
+                   -> case b8 of wild3 {
+                        GHC.Types.False -> GHC.Types.False GHC.Types.True -> $j } } } }) -}
+385e3e1a9a0ac8814763e0441a8be6a2
+  ascii_rec ::
+    (GHC.Types.Bool
+     -> GHC.Types.Bool
+     -> GHC.Types.Bool
+     -> GHC.Types.Bool
+     -> GHC.Types.Bool
+     -> GHC.Types.Bool
+     -> GHC.Types.Bool
+     -> GHC.Types.Bool
+     -> a1)
+    -> Ascii.Coq_ascii -> a1
+  {- Arity: 2, HasNoCafRefs,
+     Strictness: <C(C(C(C(C(C(C(C(S)))))))),1*C1(C1(C1(C1(C1(C1(C1(C1(U))))))))><S,1*U(U,U,U,U,U,U,U,U)>,
+     Unfolding: InlineRule (0, True, True) Ascii.ascii_rect -}
+c783403d0015f347585718c935d10262
+  ascii_rect ::
+    (GHC.Types.Bool
+     -> GHC.Types.Bool
+     -> GHC.Types.Bool
+     -> GHC.Types.Bool
+     -> GHC.Types.Bool
+     -> GHC.Types.Bool
+     -> GHC.Types.Bool
+     -> GHC.Types.Bool
+     -> a1)
+    -> Ascii.Coq_ascii -> a1
+  {- Arity: 2, HasNoCafRefs,
+     Strictness: <C(C(C(C(C(C(C(C(S)))))))),1*C1(C1(C1(C1(C1(C1(C1(C1(U))))))))><S,1*U(U,U,U,U,U,U,U,U)>,
+     Inline: [0],
+     Unfolding: InlineRule (2, True, False)
+                (\ @ a1
+                   (w :: GHC.Types.Bool
+                         -> GHC.Types.Bool
+                         -> GHC.Types.Bool
+                         -> GHC.Types.Bool
+                         -> GHC.Types.Bool
+                         -> GHC.Types.Bool
+                         -> GHC.Types.Bool
+                         -> GHC.Types.Bool
+                         -> a1)
+                   (w1 :: Ascii.Coq_ascii) ->
+                 case w1 of ww { Ascii.Ascii ww1 ww2 ww3 ww4 ww5 ww6 ww7 ww8 ->
+                 w ww1 ww2 ww3 ww4 ww5 ww6 ww7 ww8 }) -}
+vectorised variables:
+vectorised tycons:
+vectorised reused tycons:
+parallel variables:
+parallel tycons:
+trusted: safe
+require own pkg trusted: False
+

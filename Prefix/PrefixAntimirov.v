@@ -24,44 +24,75 @@ Qed.
 
 Hint Resolve in_prefix.
 
-Definition antimirov_prefix
-  : forall e s, {prefix e s} + {~ prefix e s}.
-  refine (fix antimirov_prefix e s : {prefix e s} + {~ prefix e s} :=
-            match s with
-            | EmptyString =>
-              match null e with
-              | left _ => left _
-              | right _ => right _
-              end
-            | String a' s' =>
-              match null e with
-              | left _ => left _
-              | right _ =>
-                match Exists_dec (fun e' => prefix e' s')
-                                 (pderiv a' e)
-                                 (fun e' => antimirov_prefix e' s')
-                                 with
-                | left _ => left _
-                | right _ => right _
-                end
-              end
-            end) ; clear antimirov_prefix ;
-               try solve [econstructor ; eauto ; reflexivity ]. 
+
+Fixpoint antimirov_prefix (e : regex)(s : string) : bool :=
+  match s with
+  | EmptyString => null e
+  | String a' s' =>
+    orb (null e)
+        (existsb (fun e' => antimirov_prefix e' s') (pderiv a' e))
+  end.
+
+Theorem antimirov_prefix_sound
+  : forall s e, Is_true (antimirov_prefix e s) -> prefix e s.
+Proof.
+  induction s ; intros e ; simpl in * ; intros H.
   +
-    intro H ; inverts* H.
-    apply empty_string_concat in H1 ; destruct H1 ; substs.
-    contradiction.
+    apply null_sound in H.
+    apply MkPrefix with (x := "")(y := "") ; simpl in * ; auto.
   +
-    apply Exists_exists in e0.
-    destruct e0 as [e' [HIe' Hpe']].
-    inverts* Hpe'.
-    assert (Hex : x <<<- (pderiv a' e)).
-    eapply in_set_cons ; eauto.
-    eapply pderiv_sound in Hex ; eauto.
-    econstructor ; eauto. reflexivity.
+    apply orb_prop_elim in H.
+    destruct H.
+    -
+      apply null_sound in H.
+      apply MkPrefix with (x := "")(y := String a s) ; auto.
+    -
+      apply Is_true_eq_true in H.
+      apply existsb_exists in H.
+      destruct H as [e' [Hin Heq]].
+      apply Is_true_eq_left in Heq.
+      apply IHs in Heq.
+      inverts* Heq.
+      assert (Hx : x <<<- pderiv a e).
+      *
+        unfolds.
+        apply Exists_exists.
+        exists e' ; auto.
+      *
+        apply (pderiv_sound e a (eq_refl (pderiv a e))) in Hx.
+        apply MkPrefix with (x := String a x)(y := y) ; simpl ; eauto.
+Qed.
+
+Theorem antimirov_prefix_complete
+  : forall s e, prefix e s -> Is_true (antimirov_prefix e s).
+Proof.
+  induction s ; intros e ; simpl in * ; intros H.
   +
-    intro contra ; inverts* contra.
-    destruct x ; try contradiction.
-    injects H0.
-    apply pderiv_complete with (s := x) (a := a) in H ; auto.
-Defined.
+    inverts* H.
+    apply empty_string_concat in H1.
+    destruct H1.
+    substs.
+    apply null_complete in H0 ; auto.
+  +
+    inverts* H.
+    destruct x.
+    simpl in *.
+    substs.
+    apply null_complete in H0.
+    apply orb_prop_intro ; left*.
+    injects* H1.
+    eapply pderiv_complete in H0 ; eauto.
+    unfolds in H0.
+    apply Exists_exists in H0.
+    destruct H0 as [e'[HIn Hs]].
+    assert (Hx : prefix e' (x ++ y)).
+    -
+      econstructor ; eauto.
+    -
+      apply IHs in Hx.
+      apply orb_prop_intro ; right.
+      apply Is_true_eq_left.
+      apply existsb_exists.
+      apply Is_true_eq_true in Hx.
+      exists e' ; splits ; auto.
+Qed.

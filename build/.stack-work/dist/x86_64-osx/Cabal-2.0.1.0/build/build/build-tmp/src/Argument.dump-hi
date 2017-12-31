@@ -1,0 +1,504 @@
+
+==================== FINAL INTERFACE ====================
+2017-12-30 18:07:07.820407 UTC
+
+interface main:Argument 8022
+  interface hash: 7d977d5f6f3bec085693327d7b7148c5
+  ABI hash: 6f8e43ffdcb844cc740eedd52e108415
+  export-list hash: 2a11e94024fdddc4091b67a2eb2081f4
+  orphan hash: 693e9af84d3dfcc71e640e005bdc5e2e
+  flag hash: 070ecf0bbcbbbb93370072c3b472ea02
+  sig of: Nothing
+  used TH splices: False
+  where
+exports:
+  Argument.defaultOptions
+  Argument.parseOptions
+  Argument.Algorithm{Argument.Antimirov Argument.Brzozowski}
+  Argument.Options{Argument.Options alg files help regex version}
+module dependencies:
+package dependencies: base-4.10.1.0* ghc-prim-0.5.1.1
+                      integer-gmp-1.0.1.0
+orphans: base-4.10.1.0:GHC.Float base-4.10.1.0:GHC.Base
+family instance modules: base-4.10.1.0:Control.Applicative
+                         base-4.10.1.0:Data.Either base-4.10.1.0:Data.Functor.Const
+                         base-4.10.1.0:Data.Functor.Identity base-4.10.1.0:Data.Monoid
+                         base-4.10.1.0:Data.Type.Equality base-4.10.1.0:GHC.Generics
+                         base-4.10.1.0:GHC.IO.Exception base-4.10.1.0:GHC.TypeLits
+                         base-4.10.1.0:GHC.TypeNats
+import  -/  base-4.10.1.0:Data.Foldable 9ed87455d68e87ff2b5b8725eae9897e
+import  -/  base-4.10.1.0:Data.Maybe 07738c5485acb328136bb15596f8b845
+import  -/  base-4.10.1.0:GHC.Base 782fd99b5e36f3698a26179a49afca64
+import  -/  base-4.10.1.0:GHC.Show 0a8ce2b5e533d1c2cfb7954e6736be45
+import  -/  base-4.10.1.0:Prelude 31945b7d0084063347fc52506d3a4020
+import  -/  ghc-prim-0.5.1.1:GHC.Classes 93e2660065dce9329577e83d76d8f0d4
+import  -/  ghc-prim-0.5.1.1:GHC.Types b1fd0716441595db508c1a74387bf394
+be334968c9950f688377149192f95aa8
+  $fEqAlgorithm :: GHC.Classes.Eq Argument.Algorithm
+  DFunId
+  {- HasNoCafRefs, Strictness: m, Inline: CONLIKE,
+     Unfolding: DFun:.
+                  @ Argument.Algorithm
+                  Argument.$fEqAlgorithm_$c==
+                  Argument.$fEqAlgorithm_$c/= -}
+be334968c9950f688377149192f95aa8
+  $fEqAlgorithm_$c/= ::
+    Argument.Algorithm -> Argument.Algorithm -> GHC.Types.Bool
+  {- Arity: 2, HasNoCafRefs, Strictness: <S,1*U><S,1*U>,
+     Unfolding: InlineRule (2, True, False)
+                (\ (a :: Argument.Algorithm) (b :: Argument.Algorithm) ->
+                 case a of wild {
+                   Argument.Antimirov
+                   -> case b of wild1 {
+                        Argument.Antimirov -> GHC.Types.False
+                        Argument.Brzozowski -> GHC.Types.True }
+                   Argument.Brzozowski
+                   -> case b of wild1 {
+                        Argument.Antimirov -> GHC.Types.True
+                        Argument.Brzozowski -> GHC.Types.False } }) -}
+be334968c9950f688377149192f95aa8
+  $fEqAlgorithm_$c== ::
+    Argument.Algorithm -> Argument.Algorithm -> GHC.Types.Bool
+  {- Arity: 2, HasNoCafRefs, Strictness: <S,1*U><S,1*U>,
+     Unfolding: InlineRule (2, True, False)
+                (\ (ds :: Argument.Algorithm) (ds1 :: Argument.Algorithm) ->
+                 case ds of wild {
+                   Argument.Antimirov
+                   -> case ds1 of wild1 {
+                        Argument.Antimirov -> GHC.Types.True
+                        Argument.Brzozowski -> GHC.Types.False }
+                   Argument.Brzozowski
+                   -> case ds1 of wild1 {
+                        Argument.Antimirov -> GHC.Types.False
+                        Argument.Brzozowski -> GHC.Types.True } }) -}
+be334968c9950f688377149192f95aa8
+  $fOrdAlgorithm :: GHC.Classes.Ord Argument.Algorithm
+  DFunId
+  {- HasNoCafRefs, Strictness: m, Inline: CONLIKE,
+     Unfolding: DFun:.
+                  @ Argument.Algorithm
+                  Argument.$fEqAlgorithm
+                  Argument.$fOrdAlgorithm_$ccompare
+                  Argument.$fOrdAlgorithm_$c<
+                  Argument.$fOrdAlgorithm_$c<=
+                  Argument.$fOrdAlgorithm_$c>
+                  Argument.$fOrdAlgorithm_$c>=
+                  Argument.$fOrdAlgorithm_$cmax
+                  Argument.$fOrdAlgorithm_$cmin -}
+be334968c9950f688377149192f95aa8
+  $fOrdAlgorithm_$c< ::
+    Argument.Algorithm -> Argument.Algorithm -> GHC.Types.Bool
+  {- Arity: 2, HasNoCafRefs, Strictness: <S,1*U><S,1*U>,
+     Unfolding: InlineRule (2, True, False)
+                (\ (a :: Argument.Algorithm) (b :: Argument.Algorithm) ->
+                 case a of wild {
+                   Argument.Antimirov
+                   -> case b of wild1 {
+                        Argument.Antimirov -> GHC.Types.False
+                        Argument.Brzozowski -> GHC.Types.True }
+                   Argument.Brzozowski
+                   -> case b of wild1 { DEFAULT -> GHC.Types.False } }) -}
+be334968c9950f688377149192f95aa8
+  $fOrdAlgorithm_$c<= ::
+    Argument.Algorithm -> Argument.Algorithm -> GHC.Types.Bool
+  {- Arity: 2, HasNoCafRefs, Strictness: <S,1*U><S,1*U>,
+     Unfolding: InlineRule (2, True, False)
+                (\ (a :: Argument.Algorithm) (b :: Argument.Algorithm) ->
+                 case b of wild {
+                   Argument.Antimirov
+                   -> case a of wild1 {
+                        Argument.Antimirov -> GHC.Types.True
+                        Argument.Brzozowski -> GHC.Types.False }
+                   Argument.Brzozowski
+                   -> case a of wild1 { DEFAULT -> GHC.Types.True } }) -}
+be334968c9950f688377149192f95aa8
+  $fOrdAlgorithm_$c> ::
+    Argument.Algorithm -> Argument.Algorithm -> GHC.Types.Bool
+  {- Arity: 2, HasNoCafRefs, Strictness: <S,1*U><S,1*U>,
+     Unfolding: InlineRule (2, True, True)
+                (\ (a :: Argument.Algorithm) (b :: Argument.Algorithm) ->
+                 Argument.$fOrdAlgorithm_$c< b a) -}
+be334968c9950f688377149192f95aa8
+  $fOrdAlgorithm_$c>= ::
+    Argument.Algorithm -> Argument.Algorithm -> GHC.Types.Bool
+  {- Arity: 2, HasNoCafRefs, Strictness: <S,1*U><S,1*U>,
+     Unfolding: InlineRule (2, True, False)
+                (\ (a :: Argument.Algorithm) (b :: Argument.Algorithm) ->
+                 case a of wild {
+                   Argument.Antimirov
+                   -> case b of wild1 {
+                        Argument.Antimirov -> GHC.Types.True
+                        Argument.Brzozowski -> GHC.Types.False }
+                   Argument.Brzozowski
+                   -> case b of wild1 { DEFAULT -> GHC.Types.True } }) -}
+be334968c9950f688377149192f95aa8
+  $fOrdAlgorithm_$ccompare ::
+    Argument.Algorithm -> Argument.Algorithm -> GHC.Types.Ordering
+  {- Arity: 2, HasNoCafRefs, Strictness: <S,1*U><S,1*U>,
+     Unfolding: InlineRule (2, True, False)
+                (\ (a :: Argument.Algorithm) (b :: Argument.Algorithm) ->
+                 case a of wild {
+                   Argument.Antimirov
+                   -> case b of wild1 {
+                        Argument.Antimirov -> GHC.Types.EQ
+                        Argument.Brzozowski -> GHC.Types.LT }
+                   Argument.Brzozowski
+                   -> case b of wild1 {
+                        Argument.Antimirov -> GHC.Types.GT
+                        Argument.Brzozowski -> GHC.Types.EQ } }) -}
+be334968c9950f688377149192f95aa8
+  $fOrdAlgorithm_$cmax ::
+    Argument.Algorithm -> Argument.Algorithm -> Argument.Algorithm
+  {- Arity: 2, HasNoCafRefs, Strictness: <S,1*U><S,1*U>,
+     Unfolding: InlineRule (2, True, False)
+                (\ (x :: Argument.Algorithm) (y :: Argument.Algorithm) ->
+                 case y of wild {
+                   Argument.Antimirov -> x
+                   Argument.Brzozowski
+                   -> case x of wild1 { DEFAULT -> Argument.Brzozowski } }) -}
+be334968c9950f688377149192f95aa8
+  $fOrdAlgorithm_$cmin ::
+    Argument.Algorithm -> Argument.Algorithm -> Argument.Algorithm
+  {- Arity: 2, HasNoCafRefs, Strictness: <S,1*U><S,1*U>,
+     Unfolding: InlineRule (2, True, False)
+                (\ (x :: Argument.Algorithm) (y :: Argument.Algorithm) ->
+                 case y of wild {
+                   Argument.Antimirov
+                   -> case x of wild1 { DEFAULT -> Argument.Antimirov }
+                   Argument.Brzozowski -> x }) -}
+be334968c9950f688377149192f95aa8
+  $fShowAlgorithm :: GHC.Show.Show Argument.Algorithm
+  DFunId
+  {- Strictness: m, Inline: CONLIKE,
+     Unfolding: DFun:.
+                  @ Argument.Algorithm
+                  Argument.$fShowAlgorithm_$cshowsPrec
+                  Argument.$fShowAlgorithm_$cshow
+                  Argument.$fShowAlgorithm_$cshowList -}
+be334968c9950f688377149192f95aa8
+  $fShowAlgorithm1 :: Argument.Algorithm -> GHC.Show.ShowS
+  {- Arity: 2, Strictness: <S,1*U><L,1*U>,
+     Unfolding: InlineRule (2, True, False)
+                (\ (ds :: Argument.Algorithm) (eta :: GHC.Base.String) ->
+                 case ds of wild {
+                   Argument.Antimirov
+                   -> GHC.Base.augment
+                        @ GHC.Types.Char
+                        (\ @ b
+                           (c :: GHC.Types.Char -> b -> b)[OneShot]
+                           (n :: b)[OneShot] ->
+                         GHC.Base.foldr @ GHC.Types.Char @ b c n Argument.$fShowAlgorithm4)
+                        eta
+                   Argument.Brzozowski
+                   -> GHC.Base.augment
+                        @ GHC.Types.Char
+                        (\ @ b
+                           (c :: GHC.Types.Char -> b -> b)[OneShot]
+                           (n :: b)[OneShot] ->
+                         GHC.Base.foldr @ GHC.Types.Char @ b c n Argument.$fShowAlgorithm2)
+                        eta }) -}
+3419cdc75eb4233efba6903507942391
+  $fShowAlgorithm2 :: [GHC.Types.Char]
+  {- Unfolding: (GHC.CString.unpackCString#
+                   Argument.$fShowAlgorithm3) -}
+950e4f4276bb5b7c670d483e892e67ac
+  $fShowAlgorithm3 :: GHC.Prim.Addr#
+  {- HasNoCafRefs, Unfolding: ("Brzozowski"#) -}
+10896b842656419d5594198a20d18dd9
+  $fShowAlgorithm4 :: [GHC.Types.Char]
+  {- Unfolding: (GHC.CString.unpackCString#
+                   Argument.$fShowAlgorithm5) -}
+029c770245336e2be08be98173cc18a2
+  $fShowAlgorithm5 :: GHC.Prim.Addr#
+  {- HasNoCafRefs, Unfolding: ("Antimirov"#) -}
+be334968c9950f688377149192f95aa8
+  $fShowAlgorithm_$cshow :: Argument.Algorithm -> GHC.Base.String
+  {- Arity: 1, Strictness: <S,1*U>,
+     Unfolding: InlineRule (1, True, False)
+                (\ (x :: Argument.Algorithm) ->
+                 case x of wild {
+                   Argument.Antimirov -> Argument.$fShowAlgorithm4
+                   Argument.Brzozowski -> Argument.$fShowAlgorithm2 }) -}
+be334968c9950f688377149192f95aa8
+  $fShowAlgorithm_$cshowList ::
+    [Argument.Algorithm] -> GHC.Show.ShowS
+  {- Arity: 2,
+     Unfolding: (GHC.Show.showList__
+                   @ Argument.Algorithm
+                   Argument.$fShowAlgorithm1) -}
+be334968c9950f688377149192f95aa8
+  $fShowAlgorithm_$cshowsPrec ::
+    GHC.Types.Int -> Argument.Algorithm -> GHC.Show.ShowS
+  {- Arity: 3, Strictness: <L,A><S,1*U><L,1*U>,
+     Unfolding: InlineRule (3, True, False)
+                (\ (ds :: GHC.Types.Int)
+                   (ds1 :: Argument.Algorithm)
+                   (eta :: GHC.Base.String) ->
+                 case ds1 of wild {
+                   Argument.Antimirov
+                   -> GHC.Base.augment
+                        @ GHC.Types.Char
+                        (\ @ b
+                           (c :: GHC.Types.Char -> b -> b)[OneShot]
+                           (n :: b)[OneShot] ->
+                         GHC.Base.foldr @ GHC.Types.Char @ b c n Argument.$fShowAlgorithm4)
+                        eta
+                   Argument.Brzozowski
+                   -> GHC.Base.augment
+                        @ GHC.Types.Char
+                        (\ @ b
+                           (c :: GHC.Types.Char -> b -> b)[OneShot]
+                           (n :: b)[OneShot] ->
+                         GHC.Base.foldr @ GHC.Types.Char @ b c n Argument.$fShowAlgorithm2)
+                        eta }) -}
+aba79baa4f1e746093f3a8f774cb7c4e
+  $tc'Antimirov :: GHC.Types.TyCon
+  {- HasNoCafRefs, Strictness: m,
+     Unfolding: (GHC.Types.TyCon
+                   2069898142122099834##
+                   18043130047239072250##
+                   Argument.$trModule
+                   Argument.$tc'Antimirov2
+                   0#
+                   Argument.$tc'Antimirov1) -}
+5bcfd4a04dd7842b12931fc4826306b2
+  $tc'Antimirov1 :: GHC.Types.KindRep
+  {- HasNoCafRefs, Strictness: m1, Inline: [~] -}
+ed147046e3cd34841a40fd8085af2058
+  $tc'Antimirov2 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS Argument.$tc'Antimirov3) -}
+982951c62ee7bd17f76ec83d05ee55e8
+  $tc'Antimirov3 :: GHC.Prim.Addr#
+  {- HasNoCafRefs, Unfolding: ("'Antimirov"#) -}
+70be06318e18eb55c2e3f6e8ec64afbb
+  $tc'Brzozowski :: GHC.Types.TyCon
+  {- HasNoCafRefs, Strictness: m,
+     Unfolding: (GHC.Types.TyCon
+                   926934470863456956##
+                   12405058545035548544##
+                   Argument.$trModule
+                   Argument.$tc'Brzozowski1
+                   0#
+                   Argument.$tc'Antimirov1) -}
+279226d98b50eb8a54c645c5a1cb45f7
+  $tc'Brzozowski1 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS Argument.$tc'Brzozowski2) -}
+bad0a8e10cb484250f028f5dab2a7a35
+  $tc'Brzozowski2 :: GHC.Prim.Addr#
+  {- HasNoCafRefs, Unfolding: ("'Brzozowski"#) -}
+ff56ff348e24488c4ac12c8e6b4e07b1
+  $tc'Options :: GHC.Types.TyCon
+  {- HasNoCafRefs, Strictness: m,
+     Unfolding: (GHC.Types.TyCon
+                   7945931018117857455##
+                   11272308125325704569##
+                   Argument.$trModule
+                   Argument.$tc'Options2
+                   0#
+                   Argument.$tc'Options1) -}
+1a75b5b1d38c3851b67bf22d83e0aa07
+  $tc'Options1 :: GHC.Types.KindRep
+  {- HasNoCafRefs, Strictness: m4, Inline: [~] -}
+ad64a4bfa8001c7a6e7a32eb41effaad
+  $tc'Options2 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS Argument.$tc'Options3) -}
+3387be347fcb6fea40ffeebc0500a3c8
+  $tc'Options3 :: GHC.Prim.Addr#
+  {- HasNoCafRefs, Unfolding: ("'Options"#) -}
+8ab705e2daa69256ff1a8951a0977c9f
+  $tcAlgorithm :: GHC.Types.TyCon
+  {- HasNoCafRefs, Strictness: m,
+     Unfolding: (GHC.Types.TyCon
+                   15023719818211625135##
+                   3325169796155470720##
+                   Argument.$trModule
+                   Argument.$tcAlgorithm1
+                   0#
+                   GHC.Types.krep$*) -}
+ab418bccd9647e677a4da15774816026
+  $tcAlgorithm1 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS Argument.$tcAlgorithm2) -}
+a68061df2059d7996b2450c0926819ea
+  $tcAlgorithm2 :: GHC.Prim.Addr#
+  {- HasNoCafRefs, Unfolding: ("Algorithm"#) -}
+41715a3dd09e6a7e41512a82ab1b5cda
+  $tcOptions :: GHC.Types.TyCon
+  {- HasNoCafRefs, Strictness: m,
+     Unfolding: (GHC.Types.TyCon
+                   17827737328269952409##
+                   10353227040556586467##
+                   Argument.$trModule
+                   Argument.$tcOptions1
+                   0#
+                   GHC.Types.krep$*) -}
+74d5a2369f71a15123d14c599f97e48f
+  $tcOptions1 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS Argument.$tcOptions2) -}
+71451f405ce3e2c1ebc5aa41bcb961c6
+  $tcOptions2 :: GHC.Prim.Addr#
+  {- HasNoCafRefs, Unfolding: ("Options"#) -}
+8ba372c97e7645ded5c27d7e730d2268
+  $trModule :: GHC.Types.Module
+  {- HasNoCafRefs, Strictness: m,
+     Unfolding: (GHC.Types.Module
+                   Argument.$trModule3
+                   Argument.$trModule1) -}
+655e943e45953410ea836f73b0f284ba
+  $trModule1 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS Argument.$trModule2) -}
+b4a6371f16de8f3e6f1e6006fae5795f
+  $trModule2 :: GHC.Prim.Addr#
+  {- HasNoCafRefs, Unfolding: ("Argument"#) -}
+ea8f81bd03e98eef50f645bd49bee8fe
+  $trModule3 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS Argument.$trModule4) -}
+6f02a01e13d72d3759c0a39826d0e361
+  $trModule4 :: GHC.Prim.Addr#
+  {- HasNoCafRefs, Unfolding: ("main"#) -}
+be334968c9950f688377149192f95aa8
+  data Algorithm = Antimirov | Brzozowski
+a3de2ffd9fa907d8d9925e4d6a633633
+  data Options
+    = Options {help :: GHC.Types.Bool,
+               version :: GHC.Types.Bool,
+               alg :: Argument.Algorithm,
+               regex :: GHC.Base.Maybe GHC.Base.String,
+               files :: [GHC.Base.String]}
+a3de2ffd9fa907d8d9925e4d6a633633
+  alg :: Argument.Options -> Argument.Algorithm
+  RecSel Left Argument.Options
+  {- Arity: 1, HasNoCafRefs, Strictness: <S(LLSLL),1*U(A,A,1*U,A,A)>,
+     Unfolding: InlineRule (1, True, False)
+                (\ (ds :: Argument.Options) ->
+                 case ds of wild { Argument.Options ds1 ds2 ds3 ds4 ds5 -> ds3 }) -}
+34594b219f1adb75dac8d7e706dc288d
+  defaultOptions :: Argument.Options
+  {- HasNoCafRefs, Strictness: m,
+     Unfolding: (Argument.Options
+                   GHC.Types.False
+                   GHC.Types.False
+                   Argument.Brzozowski
+                   (GHC.Base.Nothing @ GHC.Base.String)
+                   (GHC.Types.[] @ GHC.Base.String)) -}
+a3de2ffd9fa907d8d9925e4d6a633633
+  files :: Argument.Options -> [GHC.Base.String]
+  RecSel Left Argument.Options
+  {- Arity: 1, HasNoCafRefs, Strictness: <S(LLLLS),1*U(A,A,A,A,1*U)>,
+     Unfolding: InlineRule (1, True, False)
+                (\ (ds :: Argument.Options) ->
+                 case ds of wild { Argument.Options ds1 ds2 ds3 ds4 ds5 -> ds5 }) -}
+a3de2ffd9fa907d8d9925e4d6a633633
+  help :: Argument.Options -> GHC.Types.Bool
+  RecSel Left Argument.Options
+  {- Arity: 1, HasNoCafRefs, Strictness: <S(SLLLL),1*U(1*U,A,A,A,A)>,
+     Unfolding: InlineRule (1, True, False)
+                (\ (ds :: Argument.Options) ->
+                 case ds of wild { Argument.Options ds1 ds2 ds3 ds4 ds5 -> ds1 }) -}
+0151c86d7fbd970c35375bb4dfcc1a18
+  parseOptions :: [GHC.Base.String] -> Argument.Options
+  {- Arity: 1,
+     Unfolding: (GHC.List.foldl
+                   @ [GHC.Types.Char]
+                   @ Argument.Options
+                   Argument.parseOptions1
+                   Argument.defaultOptions) -}
+9f789c682217721549d4da9490a247db
+  parseOptions1 ::
+    Argument.Options -> [GHC.Types.Char] -> Argument.Options
+  {- Arity: 2, Strictness: <S,1*U(U,U,U,U,U)><S,U>m, Inline: [0],
+     Unfolding: InlineRule (2, True, False)
+                (\ (w :: Argument.Options) (w1 :: [GHC.Types.Char]) ->
+                 case w of ww { Argument.Options ww1 ww2 ww3 ww4 ww5 ->
+                 case GHC.Base.eqString w1 Argument.parseOptions8 of wild {
+                   GHC.Types.False
+                   -> case GHC.Base.eqString w1 Argument.parseOptions6 of wild1 {
+                        GHC.Types.False
+                        -> case GHC.Base.eqString w1 Argument.parseOptions4 of wild2 {
+                             GHC.Types.False
+                             -> case GHC.Base.eqString w1 Argument.parseOptions2 of wild3 {
+                                  GHC.Types.False
+                                  -> case ww4 of wild4 {
+                                       GHC.Base.Nothing
+                                       -> Argument.Options
+                                            ww1
+                                            ww2
+                                            ww3
+                                            (GHC.Base.Just @ [GHC.Types.Char] w1)
+                                            ww5
+                                       GHC.Base.Just ipv
+                                       -> Argument.Options
+                                            ww1
+                                            ww2
+                                            ww3
+                                            wild4
+                                            (GHC.Types.: @ [GHC.Types.Char] w1 ww5) }
+                                  GHC.Types.True
+                                  -> Argument.Options ww1 GHC.Types.True ww3 ww4 ww5 }
+                             GHC.Types.True -> Argument.Options GHC.Types.True ww2 ww3 ww4 ww5 }
+                        GHC.Types.True
+                        -> Argument.Options ww1 ww2 Argument.Brzozowski ww4 ww5 }
+                   GHC.Types.True
+                   -> Argument.Options ww1 ww2 Argument.Antimirov ww4 ww5 } }) -}
+d4df6c8eeb39514c79adee14d8d2242c
+  parseOptions2 :: [GHC.Types.Char]
+  {- Unfolding: (GHC.CString.unpackCString#
+                   Argument.parseOptions3) -}
+815421b972e3c65cbbfe23238adfaa1c
+  parseOptions3 :: GHC.Prim.Addr#
+  {- HasNoCafRefs, Unfolding: ("-v"#) -}
+aa317d1f39ee03b63fa17546e0f41b28
+  parseOptions4 :: [GHC.Types.Char]
+  {- Unfolding: (GHC.CString.unpackCString#
+                   Argument.parseOptions5) -}
+d7de37789b88c1bbc0e73d039d3e5ecf
+  parseOptions5 :: GHC.Prim.Addr#
+  {- HasNoCafRefs, Unfolding: ("-h"#) -}
+1e8dadcef1bf46316ad47b328256d0f3
+  parseOptions6 :: [GHC.Types.Char]
+  {- Unfolding: (GHC.CString.unpackCString#
+                   Argument.parseOptions7) -}
+7a8f6faf72705b3f18a7d23af084322f
+  parseOptions7 :: GHC.Prim.Addr#
+  {- HasNoCafRefs, Unfolding: ("-B"#) -}
+8440ff37c9326fdbffec96271501e356
+  parseOptions8 :: [GHC.Types.Char]
+  {- Unfolding: (GHC.CString.unpackCString#
+                   Argument.parseOptions9) -}
+08990800621e5db493ca9bb38757d4b7
+  parseOptions9 :: GHC.Prim.Addr#
+  {- HasNoCafRefs, Unfolding: ("-A"#) -}
+a3de2ffd9fa907d8d9925e4d6a633633
+  regex :: Argument.Options -> GHC.Base.Maybe GHC.Base.String
+  RecSel Left Argument.Options
+  {- Arity: 1, HasNoCafRefs, Strictness: <S(LLLSL),1*U(A,A,A,1*U,A)>,
+     Unfolding: InlineRule (1, True, False)
+                (\ (ds :: Argument.Options) ->
+                 case ds of wild { Argument.Options ds1 ds2 ds3 ds4 ds5 -> ds4 }) -}
+a3de2ffd9fa907d8d9925e4d6a633633
+  version :: Argument.Options -> GHC.Types.Bool
+  RecSel Left Argument.Options
+  {- Arity: 1, HasNoCafRefs, Strictness: <S(LSLLL),1*U(A,1*U,A,A,A)>,
+     Unfolding: InlineRule (1, True, False)
+                (\ (ds :: Argument.Options) ->
+                 case ds of wild { Argument.Options ds1 ds2 ds3 ds4 ds5 -> ds2 }) -}
+instance [safe] GHC.Classes.Eq [Argument.Algorithm]
+  = Argument.$fEqAlgorithm
+instance [safe] GHC.Classes.Ord [Argument.Algorithm]
+  = Argument.$fOrdAlgorithm
+instance [safe] GHC.Show.Show [Argument.Algorithm]
+  = Argument.$fShowAlgorithm
+vectorised variables:
+vectorised tycons:
+vectorised reused tycons:
+parallel variables:
+parallel tycons:
+trusted: safe
+require own pkg trusted: False
+

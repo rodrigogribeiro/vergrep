@@ -1,0 +1,72 @@
+
+==================== FINAL INTERFACE ====================
+2017-12-30 18:23:55.976043 UTC
+
+interface main:Specif 8022
+  interface hash: 981bec4fc46e319cb76c276362f88c1e
+  ABI hash: 81b3653087b326c5102e7e0ccd2d0a5e
+  export-list hash: 7f6ea6cadebb80a142d41294552dd2e6
+  orphan hash: 693e9af84d3dfcc71e640e005bdc5e2e
+  flag hash: 070ecf0bbcbbbb93370072c3b472ea02
+  sig of: Nothing
+  used TH splices: False
+  where
+exports:
+  Specif.__
+  Specif.sumbool_rec
+  Specif.sumbool_rect
+module dependencies:
+package dependencies: base-4.10.1.0* ghc-prim-0.5.1.1
+                      integer-gmp-1.0.1.0
+orphans: base-4.10.1.0:GHC.Float base-4.10.1.0:GHC.Base
+family instance modules: base-4.10.1.0:Control.Applicative
+                         base-4.10.1.0:Data.Either base-4.10.1.0:Data.Functor.Const
+                         base-4.10.1.0:Data.Functor.Identity base-4.10.1.0:Data.Monoid
+                         base-4.10.1.0:Data.Type.Equality base-4.10.1.0:GHC.Generics
+                         base-4.10.1.0:GHC.IO.Exception base-4.10.1.0:GHC.TypeLits
+                         base-4.10.1.0:GHC.TypeNats
+import  -/  base-4.10.1.0:GHC.Err 514b3a24b22e9d7d731c2d0d02d10842
+import  -/  base-4.10.1.0:Prelude 31945b7d0084063347fc52506d3a4020
+a2dc5c623b43752880c124cae7f45efa
+  $trModule :: GHC.Types.Module
+  {- HasNoCafRefs, Strictness: m,
+     Unfolding: (GHC.Types.Module
+                   Specif.$trModule3
+                   Specif.$trModule1) -}
+2c7ca08b2c100b211206975b8936577f
+  $trModule1 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS Specif.$trModule2) -}
+a3f141d39cfe37df96e361f80805c3da
+  $trModule2 :: GHC.Prim.Addr#
+  {- HasNoCafRefs, Unfolding: ("Specif"#) -}
+3b33170eeb2913742deffd611372d2c4
+  $trModule3 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS Specif.$trModule4) -}
+f78998f3069e2674379134e8d8401799
+  $trModule4 :: GHC.Prim.Addr#
+  {- HasNoCafRefs, Unfolding: ("main"#) -}
+12154d50ab6478a57cfd0cf0782de317
+  __ :: any
+  {- Strictness: x -}
+2b66507dfd6173697814a0ff72276170
+  sumbool_rec :: (() -> a1) -> (() -> a1) -> GHC.Types.Bool -> a1
+  {- Arity: 3, Strictness: <L,1*C1(U)><L,1*C1(U)><S,1*U>,
+     Unfolding: InlineRule (0, True, True) Specif.sumbool_rect -}
+f73640f8a2e93eaedef27b75d9298532
+  sumbool_rect :: (() -> a1) -> (() -> a1) -> GHC.Types.Bool -> a1
+  {- Arity: 3, Strictness: <L,1*C1(U)><L,1*C1(U)><S,1*U>,
+     Unfolding: InlineRule (3, True, False)
+                (\ @ a1 (f :: () -> a1) (f0 :: () -> a1) (s :: GHC.Types.Bool) ->
+                 case s of wild {
+                   GHC.Types.False -> f0 (Specif.__ @ ())
+                   GHC.Types.True -> f (Specif.__ @ ()) }) -}
+vectorised variables:
+vectorised tycons:
+vectorised reused tycons:
+parallel variables:
+parallel tycons:
+trusted: safe
+require own pkg trusted: False
+

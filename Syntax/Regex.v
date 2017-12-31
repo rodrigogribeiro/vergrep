@@ -3,11 +3,12 @@
 Set Implicit Arguments.
 
 Require Export
-        Tactics.LibTactics
+        Tactics.Tactics
         Relation_Definitions
         Setoid
         List
         Omega
+        Bool
         Coq.Structures.Orders
         Ascii
         String.
@@ -90,49 +91,42 @@ Qed.
 Hint Resolve empty_string_concat.
 
 (** nullability test *)
-            
-Definition null : forall (e : regex), { "" <<- e } + { ~ ("" <<- e) }.
-  refine (fix null_rec (e : regex) : { "" <<- e } + { ~ ("" <<- e) } :=
-     match e as e1 return e = e1 -> { "" <<- e1 } + { ~ ("" <<- e1) } with
-     | #0 => fun _ =>
-       right _
-     | #1 => fun _ =>
-       left _
-     | $ _ => fun _ =>
-       right _
-     | (e1 @ e2) => fun _ =>
-       match null_rec e1 with
-       | left Hl =>
-         match null_rec e2 with
-         | left Hr =>
-           left (InCat Hl Hr eq_refl)
-         | right _ =>
-           right _
-         end  
-       | right _ =>
-         right _
-       end
-     | (e1 :+: e2) => fun _ =>
-       match null_rec e1 with
-       | left Hl =>
-         left (InLeft _ Hl)
-       | right _ =>
-         match null_rec e2 with
-         | left Hr =>
-           left (InRight _ Hr)
-         | right _ =>
-           right _
-         end        
-       end
-     | (e1 ^*) => fun _ =>
-        left (InStarLeft _)
-        end eq_refl) ; clear null_rec ; substs* ;
-       repeat (match goal with
-               | [|- ~ _] => intro Hc ; inverts* Hc
-               | [H : "" = _ ++ _ |- _] =>
-                 apply empty_string_concat in H ; destruct* H ; substs*
-               end).
-Defined.
+
+Fixpoint null (e : regex) : bool :=
+  match e with
+  | #0 => false
+  | #1 => true
+  | $ _ => false
+  | e1 @ e2 =>
+    andb (null e1) (null e2)
+  | e1 :+: e2 =>
+    orb (null e1) (null e2)
+  | (_ ^*) =>
+     true
+  end.
+
+Theorem null_sound : forall e, Is_true(null e) -> "" <<- e.
+Proof.
+  induction e ; intros ; simpl in * ; crush.
+  +
+    lets J : andb_prop_elim H.
+    destruct* J.
+  +
+    lets J : orb_prop_elim H.
+    destruct* J.
+Qed.
+
+Theorem null_complete : forall e, "" <<- e -> Is_true (null e).
+Proof.
+  intros e H ; induction e ; inverts* H ; simpl in * ; crush.
+  +
+    apply empty_string_concat in H5 ; destruct H5 ; substs ;
+    apply andb_prop_intro ; splits*.
+  +
+    apply orb_prop_intro. left*.
+  +
+    apply orb_prop_intro. right*.
+Qed.
 
 (** equivalence *)
 

@@ -1,0 +1,198 @@
+
+==================== FINAL INTERFACE ====================
+2017-12-30 18:23:56.085991 UTC
+
+interface main:Regex 8022
+  interface hash: 42421c4c86e703d36344a045921823fb
+  ABI hash: d30986ea8b555158bfef91dc12390d08
+  export-list hash: 208359e89944d4aa51c0d47d5f421a40
+  orphan hash: 693e9af84d3dfcc71e640e005bdc5e2e
+  flag hash: 070ecf0bbcbbbb93370072c3b472ea02
+  sig of: Nothing
+  used TH splices: False
+  where
+exports:
+  Regex.null
+  Regex.Coq_regex{Regex.Cat Regex.Choice Regex.Chr Regex.Emp Regex.Eps Regex.Star}
+module dependencies: Ascii Bool Datatypes Specif
+package dependencies: base-4.10.1.0* ghc-prim-0.5.1.1
+                      integer-gmp-1.0.1.0
+orphans: base-4.10.1.0:GHC.Float base-4.10.1.0:GHC.Base
+family instance modules: base-4.10.1.0:Control.Applicative
+                         base-4.10.1.0:Data.Either base-4.10.1.0:Data.Functor.Const
+                         base-4.10.1.0:Data.Functor.Identity base-4.10.1.0:Data.Monoid
+                         base-4.10.1.0:Data.Type.Equality base-4.10.1.0:GHC.Generics
+                         base-4.10.1.0:GHC.IO.Exception base-4.10.1.0:GHC.TypeLits
+                         base-4.10.1.0:GHC.TypeNats
+import  -/  base-4.10.1.0:Prelude 31945b7d0084063347fc52506d3a4020
+import  -/  Ascii 553b86cd1332eb3c651bfa05effd9565
+  exports: 618f0c35a35730d2b8c00aacec2d01d3
+  Coq_ascii 28cc8d7d4b8e85103cef1b726c964de4
+1bc279863767b5cfabbb3e58812afe0e
+  $tc'Cat :: GHC.Types.TyCon
+  {- HasNoCafRefs, Strictness: m,
+     Unfolding: (GHC.Types.TyCon
+                   9482698201124429754##
+                   13211475696001622709##
+                   Regex.$trModule
+                   Regex.$tc'Cat2
+                   0#
+                   Regex.$tc'Cat1) -}
+12a11221a59f2a8652882e255e15b297
+  $tc'Cat1 :: GHC.Types.KindRep
+  {- HasNoCafRefs, Strictness: m4, Inline: [~] -}
+5b6eeda575b402f5fcff6d0378325e30
+  $tc'Cat2 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS Regex.$tc'Cat3) -}
+b52bcee2059737e9b7a7471b8c2b8354
+  $tc'Cat3 :: GHC.Prim.Addr#
+  {- HasNoCafRefs, Unfolding: ("'Cat"#) -}
+eaa3b8e22b737b6e7fbc0925b63c6347
+  $tc'Choice :: GHC.Types.TyCon
+  {- HasNoCafRefs, Strictness: m,
+     Unfolding: (GHC.Types.TyCon
+                   16258346868160715977##
+                   14770638319520332485##
+                   Regex.$trModule
+                   Regex.$tc'Choice1
+                   0#
+                   Regex.$tc'Cat1) -}
+a40f3346f4e0fdd70ca1d774ceed6e04
+  $tc'Choice1 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS Regex.$tc'Choice2) -}
+5d00f526168eef7113e4c6aca1e85649
+  $tc'Choice2 :: GHC.Prim.Addr#
+  {- HasNoCafRefs, Unfolding: ("'Choice"#) -}
+635e053c8441ca8416368963e9d94416
+  $tc'Chr :: GHC.Types.TyCon
+  {- HasNoCafRefs, Strictness: m,
+     Unfolding: (GHC.Types.TyCon
+                   17596876154736611531##
+                   10359278825900206214##
+                   Regex.$trModule
+                   Regex.$tc'Chr2
+                   0#
+                   Regex.$tc'Chr1) -}
+d814f1777664c995db097fcef2761818
+  $tc'Chr1 :: GHC.Types.KindRep
+  {- HasNoCafRefs, Strictness: m4, Inline: [~] -}
+e12216b625fe5e4ceac5d670dc95b3d2
+  $tc'Chr2 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS Regex.$tc'Chr3) -}
+4d53403f325ad25442e672024a8eb5f4
+  $tc'Chr3 :: GHC.Prim.Addr#
+  {- HasNoCafRefs, Unfolding: ("'Chr"#) -}
+0ab2a5c054b06cf5a04225044e001d0b
+  $tc'Emp :: GHC.Types.TyCon
+  {- HasNoCafRefs, Strictness: m,
+     Unfolding: (GHC.Types.TyCon
+                   16925219494840133456##
+                   16019630789208125548##
+                   Regex.$trModule
+                   Regex.$tc'Emp2
+                   0#
+                   Regex.$tc'Emp1) -}
+3fc500ba5eab17a623e8d3ef2aa29557
+  $tc'Emp1 :: GHC.Types.KindRep
+  {- HasNoCafRefs, Strictness: m1, Inline: [~] -}
+8b85e27c23c61d9cd625e9c213e916b8
+  $tc'Emp2 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS Regex.$tc'Emp3) -}
+65c9164598d39c907a53c29ba2e40e25
+  $tc'Emp3 :: GHC.Prim.Addr#
+  {- HasNoCafRefs, Unfolding: ("'Emp"#) -}
+0e914457397cd75a651bc29c8475568e
+  $tc'Eps :: GHC.Types.TyCon
+  {- HasNoCafRefs, Strictness: m,
+     Unfolding: (GHC.Types.TyCon
+                   11834928153114122899##
+                   13208534340672617615##
+                   Regex.$trModule
+                   Regex.$tc'Eps1
+                   0#
+                   Regex.$tc'Emp1) -}
+0b27989add9736dfcaaeb957869d5923
+  $tc'Eps1 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS Regex.$tc'Eps2) -}
+90cecd15fad2db399bc25ca72889a6ae
+  $tc'Eps2 :: GHC.Prim.Addr#
+  {- HasNoCafRefs, Unfolding: ("'Eps"#) -}
+31632fde4b262001e575a6d18f8b6632
+  $tc'Star :: GHC.Types.TyCon
+  {- HasNoCafRefs, Strictness: m,
+     Unfolding: (GHC.Types.TyCon
+                   14418286553279548045##
+                   11985195748113869686##
+                   Regex.$trModule
+                   Regex.$tc'Star2
+                   0#
+                   Regex.$tc'Star1) -}
+ae717ff6bad779145c467060c1dc8d7f
+  $tc'Star1 :: GHC.Types.KindRep
+  {- HasNoCafRefs, Strictness: m4, Inline: [~] -}
+b438ae27615d8931733df5a9fb5f95c1
+  $tc'Star2 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS Regex.$tc'Star3) -}
+89085fa8b19364793bd6915dd9a85c29
+  $tc'Star3 :: GHC.Prim.Addr#
+  {- HasNoCafRefs, Unfolding: ("'Star"#) -}
+c0d1ac71a834c589167c1ebb6cd53468
+  $tcCoq_regex :: GHC.Types.TyCon
+  {- HasNoCafRefs, Strictness: m,
+     Unfolding: (GHC.Types.TyCon
+                   4947275139217284695##
+                   15752080618046235986##
+                   Regex.$trModule
+                   Regex.$tcCoq_regex1
+                   0#
+                   GHC.Types.krep$*) -}
+f2880e2a44f566899cc3ae9762ed8bfc
+  $tcCoq_regex1 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS Regex.$tcCoq_regex2) -}
+a2d60ab042228ec24ca2212e2e5f9501
+  $tcCoq_regex2 :: GHC.Prim.Addr#
+  {- HasNoCafRefs, Unfolding: ("Coq_regex"#) -}
+f1c89711b4f880beeb74b90cc67ec500
+  $trModule :: GHC.Types.Module
+  {- HasNoCafRefs, Strictness: m,
+     Unfolding: (GHC.Types.Module Regex.$trModule3 Regex.$trModule1) -}
+a0d77bde1909d08aa2b226d0205050af
+  $trModule1 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS Regex.$trModule2) -}
+1bbeb439bd9080213eda6af6d4627bd1
+  $trModule2 :: GHC.Prim.Addr#
+  {- HasNoCafRefs, Unfolding: ("Regex"#) -}
+49ca6bdc3a786103c14b4af95d597a03
+  $trModule3 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS Regex.$trModule4) -}
+04d070dd7223ec744e50e6469b9e1c45
+  $trModule4 :: GHC.Prim.Addr#
+  {- HasNoCafRefs, Unfolding: ("main"#) -}
+67a0f4c4f98e92e178069248643b8874
+  data Coq_regex
+    = Emp
+    | Eps
+    | Chr Ascii.Coq_ascii
+    | Cat Regex.Coq_regex Regex.Coq_regex
+    | Choice Regex.Coq_regex Regex.Coq_regex
+    | Star Regex.Coq_regex
+369b57277e799f16bc89bebb59ed299c
+  null :: Regex.Coq_regex -> GHC.Types.Bool
+  {- Arity: 1, HasNoCafRefs, Strictness: <S,1*U> -}
+vectorised variables:
+vectorised tycons:
+vectorised reused tycons:
+parallel variables:
+parallel tycons:
+trusted: safe
+require own pkg trusted: False
+
