@@ -8,38 +8,75 @@ Require Import
         Substring.SubstringDef
         Tactics.Tactics.
 
+Fixpoint brzozowski_substring (e : regex)(s : string) : bool :=
+  match s with
+  | EmptyString => null e
+  | String a' s' =>
+    orb (brzozowski_prefix e (String a' s'))
+        (brzozowski_substring e s')
+  end.
 
-Definition brzozowski_substring : forall e s, {substring e s} + {~ substring e s}.
-  refine (fix substring_brzozowski e s : {substring e s} + {~ substring e s} :=
-            match s with
-            | EmptyString =>
-              match null e with
-              | left _ => left _
-              | right _ => right _
-              end
-            | String a' s' =>
-              match brzozowski_prefix e (String a' s') with
-              | left _ => left _
-              | right _ =>
-                match substring_brzozowski e s' with
-                | left _ => left _
-                | right _ => right _
-                end
-              end
-            end) ; clear substring_brzozowski.
+Theorem brzozowski_substring_sound
+  : forall s e, Is_true (brzozowski_substring e s) -> substring e s.
+Proof.
+  induction s ; intros e H ; simpl in *.
   +
+    apply null_sound in H.
     apply MkSubstring with (xs := "")(ys := "")(zs := "") ; eauto.
+  + 
+    apply orb_prop_elim in H.
+    destruct H.
+    -
+      apply orb_prop_elim in H.
+      destruct H.
+      *
+        apply null_sound in H.
+        apply MkSubstring with (xs := "")(ys := "") (zs := String a s) ; eauto.
+      *
+        apply brzozowski_prefix_sound in H.
+        inverts* H.
+        apply deriv_sound in H0.
+        apply MkSubstring with (xs := "")(ys := String a x)(zs := y) ; eauto.
+    -
+      apply IHs in H.
+      inverts H.
+      apply MkSubstring with (xs := String a xs)
+                             (ys := ys)
+                             (zs := zs) ; auto.
+Qed.
+
+Theorem brzozowski_substring_complete
+  : forall s e, substring e s -> Is_true (brzozowski_substring e s).
+Proof.
+  induction s ; intros e H ; inverts* H.
   +
-    intro contra ; inverts* contra.
-    apply empty_string_concat in H0. destruct H0.
-    symmetry in H1 ; apply empty_string_concat in H1.
-    destruct H1 ; substs ; contradiction.
+    apply empty_string_concat in H1.
+    destruct H1.
+    symmetry in H1.
+    apply empty_string_concat in H1.
+    destruct H1.
+    substs.
+    simpl.
+    apply null_complete ; auto.
   +
-    apply prefix_is_substring in p.
-    inverts* p.
-  +
-    inverts* s0.
-    apply MkSubstring with (xs := String a' xs)(ys := ys)(zs := zs) ; auto.
-  +
-    apply not_cons_substring ; auto.
-Defined.
+    destruct xs ; simpl in *.
+    -
+      destruct ys ; simpl in *.
+      *
+        substs.
+        apply orb_prop_intro ; left ; apply orb_prop_intro ; left ;
+          apply null_complete in H0 ; auto.
+      * 
+        injects H1.
+        apply orb_prop_intro.
+        left.
+        apply orb_prop_intro ; right.
+        apply brzozowski_prefix_complete.
+        apply deriv_complete in H0.
+        apply MkPrefix with (x := ys)(y := zs) ; auto.
+    -
+      injects H1.
+      apply orb_prop_intro ; right.
+      apply IHs.
+      apply MkSubstring with (xs := xs)(ys := ys)(zs := zs) ; auto.
+Qed.
