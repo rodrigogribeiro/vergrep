@@ -1,10 +1,10 @@
 
 ==================== FINAL INTERFACE ====================
-2017-12-30 18:23:56.085991 UTC
+2018-01-01 16:55:40.294645 UTC
 
 interface main:Regex 8022
-  interface hash: 42421c4c86e703d36344a045921823fb
-  ABI hash: d30986ea8b555158bfef91dc12390d08
+  interface hash: ee5a4dacce7e5bc59591ce995b303b7b
+  ABI hash: 45677f1ac12eddb0e199b283a9607ad1
   export-list hash: 208359e89944d4aa51c0d47d5f421a40
   orphan hash: 693e9af84d3dfcc71e640e005bdc5e2e
   flag hash: 070ecf0bbcbbbb93370072c3b472ea02
@@ -14,7 +14,7 @@ interface main:Regex 8022
 exports:
   Regex.null
   Regex.Coq_regex{Regex.Cat Regex.Choice Regex.Chr Regex.Emp Regex.Eps Regex.Star}
-module dependencies: Ascii Bool Datatypes Specif
+module dependencies:
 package dependencies: base-4.10.1.0* ghc-prim-0.5.1.1
                       integer-gmp-1.0.1.0
 orphans: base-4.10.1.0:GHC.Float base-4.10.1.0:GHC.Base
@@ -25,9 +25,7 @@ family instance modules: base-4.10.1.0:Control.Applicative
                          base-4.10.1.0:GHC.IO.Exception base-4.10.1.0:GHC.TypeLits
                          base-4.10.1.0:GHC.TypeNats
 import  -/  base-4.10.1.0:Prelude 31945b7d0084063347fc52506d3a4020
-import  -/  Ascii 553b86cd1332eb3c651bfa05effd9565
-  exports: 618f0c35a35730d2b8c00aacec2d01d3
-  Coq_ascii 28cc8d7d4b8e85103cef1b726c964de4
+import  -/  ghc-prim-0.5.1.1:GHC.Classes 93e2660065dce9329577e83d76d8f0d4
 1bc279863767b5cfabbb3e58812afe0e
   $tc'Cat :: GHC.Types.TyCon
   {- HasNoCafRefs, Strictness: m,
@@ -177,15 +175,15 @@ a0d77bde1909d08aa2b226d0205050af
 04d070dd7223ec744e50e6469b9e1c45
   $trModule4 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("main"#) -}
-67a0f4c4f98e92e178069248643b8874
+03f5fedb5b2677bea196cc21c676dfa8
   data Coq_regex
     = Emp
     | Eps
-    | Chr Ascii.Coq_ascii
+    | Chr GHC.Types.Char
     | Cat Regex.Coq_regex Regex.Coq_regex
     | Choice Regex.Coq_regex Regex.Coq_regex
     | Star Regex.Coq_regex
-369b57277e799f16bc89bebb59ed299c
+af44fee225a8e4dd98c59f4f325fcda2
   null :: Regex.Coq_regex -> GHC.Types.Bool
   {- Arity: 1, HasNoCafRefs, Strictness: <S,1*U> -}
 vectorised variables:

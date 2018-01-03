@@ -1,21 +1,19 @@
 module Antimirov where
 
 import qualified Prelude
-import qualified Ascii
-import qualified List
 import qualified Regex
 
 type Coq_regexes = [] Regex.Coq_regex
 
 bigcat :: Coq_regexes -> Regex.Coq_regex -> [] Regex.Coq_regex
 bigcat s e =
-  List.map (\e' -> Regex.Cat e' e) s
+  (Prelude.map) (\e' -> Regex.Cat e' e) s
 
-pderiv :: Ascii.Coq_ascii -> Regex.Coq_regex -> Coq_regexes
+pderiv :: Prelude.Char -> Regex.Coq_regex -> Coq_regexes
 pderiv a e =
   case e of {
    Regex.Chr a' ->
-    case Ascii.ascii_dec a a' of {
+    case (Prelude.==) a a' of {
      Prelude.True -> (:) Regex.Eps [];
      Prelude.False -> []};
    Regex.Cat e1 e2 ->

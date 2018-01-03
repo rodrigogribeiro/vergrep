@@ -1,15 +1,14 @@
 module Brzozowski where
 
 import qualified Prelude
-import qualified Ascii
 import qualified Regex
 import qualified Smart
 
-deriv :: Ascii.Coq_ascii -> Regex.Coq_regex -> Regex.Coq_regex
+deriv :: Prelude.Char -> Regex.Coq_regex -> Regex.Coq_regex
 deriv a e =
   case e of {
    Regex.Chr c ->
-    case Ascii.ascii_dec a c of {
+    case (Prelude.==) a c of {
      Prelude.True -> Regex.Eps;
      Prelude.False -> Regex.Emp};
    Regex.Cat e1 e2 ->

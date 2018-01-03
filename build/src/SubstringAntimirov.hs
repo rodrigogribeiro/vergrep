@@ -9,7 +9,6 @@ antimirov_substring e s =
   case s of {
    [] -> Regex.null e;
    (:) a' s' ->
-    case PrefixAntimirov.antimirov_prefix e ((:) a' s') of {
-     Prelude.True -> Prelude.True;
-     Prelude.False -> antimirov_substring e s'}}
+    (Prelude.||) (PrefixAntimirov.antimirov_prefix e ((:) a' s'))
+      (antimirov_substring e s')}
 

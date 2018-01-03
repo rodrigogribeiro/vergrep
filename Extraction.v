@@ -36,9 +36,12 @@ Extract Inlined Constant mult      => "(Prelude.*)".
 Extract Inlined Constant negb      => "Prelude.not".
 Extract Inlined Constant orb       => "(Prelude.||)".
 Extract Inlined Constant plus      => "(Prelude.+)".
+Extract Inlined Constant ascii_dec => "(Prelude.==)".
+Extract Inlined Constant string_dec => "(Prelude.==)".
 Extract Inlined Constant proj1_sig => "".
 Extract Inlined Constant projT1    => "Prelude.fst".
 Extract Inlined Constant snd       => "Prelude.snd".
+Extract Inlined Constant existsb   => "Prelude.any".
 Extraction Implicit eq_rect [ x y ].
 Extraction Implicit eq_rect_r [ x y ].
 Extraction Implicit eq_rec [ x y ].
@@ -58,8 +61,6 @@ Extract Inductive comparison =>
   "Prelude.Ordering" ["Prelude.LT" "Prelude.EQ" "Prelude.GT"].
 
 Extract Inlined Constant Arith.Plus.tail_plus => "(Prelude.+)".
-
-Extract Inductive regex => "Regex" ["Emp" "Eps" "Chr" "Cat" "Choice" "Star"].
 
 Cd "./build/src".
 

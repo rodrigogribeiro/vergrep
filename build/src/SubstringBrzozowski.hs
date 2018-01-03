@@ -9,7 +9,6 @@ brzozowski_substring e s =
   case s of {
    [] -> Regex.null e;
    (:) a' s' ->
-    case PrefixBrzozowski.brzozowski_prefix e ((:) a' s') of {
-     Prelude.True -> Prelude.True;
-     Prelude.False -> brzozowski_substring e s'}}
+    (Prelude.||) (PrefixBrzozowski.brzozowski_prefix e ((:) a' s'))
+      (brzozowski_substring e s')}
 

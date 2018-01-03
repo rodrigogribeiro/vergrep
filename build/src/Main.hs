@@ -2,21 +2,21 @@ module Main where
 
 import Argument 
 import RegexParser
+import Regex
+import Data.Maybe
 import SubstringAntimirov
-improt SubstringBrzozowski
+import SubstringBrzozowski
 import System.Environment (getArgs)
 
-usageInfo :: String
-
 versionInfo :: String
-versionInfo = "vergrep - version 0.1".
+versionInfo = "vergrep - version 0.1"
 
 usageInfo :: String
 usageInfo =  "Usage: vergrep [OPTIONS] [REGEXP] [FILELIST]" ++
           "\n\nwhere\nOPTIONS\n-B: parse with Brzozowski derivatives\n" ++
           "-A: parse with Antimirov derivatives\n" ++
           "-v: Show version information" ++
-          "-h: help message".
+          "-h: help message"
 
 exec :: Algorithm -> Coq_regex -> String -> IO ()
 exec Antimirov e s
@@ -33,19 +33,19 @@ run alg xs e = mapM_ step xs
 
 parseRegexAndRun :: Options -> IO ()
 parseRegexAndRun opt
-  | isNothing (regex opt)
+  | isNothing (Argument.regex opt)
      = putStrLn usageInfo
   | otherwise
      = do
-         let r = regexParser (fromJust (regex opt))
+         let r = parseRegex (fromJust (Argument.regex opt))
          either (const (putStrLn usageInfo))
-                (run (alg opt) (files opt))
+                (run (alg opt) (files opt)) r
 
 main :: IO ()
 main
   = do
       args <- getArgs
       let opt = parseOptions args
-      in if version opt then putStrLn versionInfo
-         else if help opt then putStrLn usageInfo
+      if version opt then putStrLn versionInfo
+        else if help opt then putStrLn usageInfo
               else parseRegexAndRun opt
