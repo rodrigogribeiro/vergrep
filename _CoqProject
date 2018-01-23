@@ -4,6 +4,7 @@ Derivatives/Smart.v
 Derivatives/Brzozowski.v
 Derivatives/Antimirov.v
 Parsing/Brzozowski.v
+Parsing/Tree.v
 Prefix/Prefix.v
 Prefix/PrefixDef.v
 Prefix/PrefixBrzozowski.v
@@ -16,5 +17,7 @@ Syntax/Regex.v
 Tactics/LibTactics.v
 Tactics/Crush.v
 Tactics/Tactics.v
+Tests/Generators/GenString.v
+Tests/Generators/GenUtils.v
 Utils/Functions/Functions.v
 Extraction.v
