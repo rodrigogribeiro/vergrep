@@ -61,12 +61,39 @@ Section PARTS.
     | _  => true
     end.
 
+  Lemma non_empty_true
+    : forall xs, non_empty xs = true -> exists y ys, xs = y :: ys.
+  Proof.
+    destruct xs ; intros ; crush.
+    exists* l xs.
+  Qed.
+
   Fixpoint parts (xs : list A) : list (list (list A)) :=
     match xs with
     | [] => [[]]
     | [ c ] => [[[ c ]]]
     | (c :: cs) =>
-      concat (map (fun ps => [ athead c ps ; [c] :: ps ]) (filter non_empty(parts cs)))
+      flat_map (fun ps => [ athead c ps ; [c] :: ps ]) (filter non_empty (parts cs))
     end.
 
+  Lemma parts_correct
+    : forall xs yss, In yss (parts xs) -> concat yss = xs.
+  Proof.
+    induction xs ; intros.
+    +
+      simpl in *. crush.
+    +
+      simpl in *. destruct xs. simpl in *. crush.
+      apply in_flat_map in H.
+      destruct H as [y [HIny HInyss]].
+      apply filter_In in HIny.
+      destruct HIny.
+      apply non_empty_true in H0.
+      destruct H0 as [z [zs Heq]].
+      substs.
+      apply IHxs in H.
+      rewrite <- H.
+      simpl in HInyss.
+      crush.
+   Qed.      
 End PARTS.
