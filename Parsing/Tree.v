@@ -49,4 +49,3 @@ Proof.
     lets K : IHt2 H4.
     destruct (flat t1) eqn : Ha ; simpl in * ; jauto.
 Qed.
-

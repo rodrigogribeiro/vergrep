@@ -16,7 +16,7 @@ Section SPLITS.
       ([], y :: ys) :: map (fun p => (y :: fst p, snd p)) (splits ys)
     end.
 
-  Lemma splits_correct
+  Lemma splits_append_correct
     : forall xs ys zs, In (ys,zs) (splits xs) -> xs = ys ++ zs.
   Proof.
     induction xs ; crush.
@@ -27,27 +27,46 @@ Section SPLITS.
     rewrite Hin.
     auto.
   Qed.
+
+  Lemma splits_size
+    : forall xs ys zs, In (ys,zs) (splits xs) -> length ys <= length xs /\
+                                           length zs <= length xs.
+  Proof.
+    induction xs ; crush.
+    apply in_map_iff in H0.
+    destruct H0 as [x [Heq Hin]].
+    inverts Heq. destruct x. simpl.
+    lets J : IHxs Hin. destruct J ; crush.
+    apply in_map_iff in H0.
+    destruct H0 as [x [Heq Hin]].
+    inverts Heq. destruct x. simpl.
+    lets J : IHxs Hin. destruct J ; crush.
+  Qed.
 End SPLITS.
 
 Section PARTS.
   Variable A : Type.
 
-  Fixpoint parts (xs : list A) : list (list (list A)) :=
+  Variable eqADec : forall (x y : A), {x = y} + {x <> y}.
+
+  Definition athead (x : A)(xs : list (list A)) :=
     match xs with
-    | [] => [[[]]]
-    | c :: cs =>
-      flat_map (fun xss => match xss with
-                        | [] => []
-                        | p :: ps => [ (c :: p) :: ps ; [ c ] :: p :: ps ] 
-                        end) (parts cs)
+    | [] => []
+    | (y :: ys) => (x :: y) :: ys
     end.
 
-  Lemma parts_correct : forall xs xss, In xss (parts xs) -> concat xss = xs.
-  Proof.
-    induction xs ; intros.
-    +
-      crush.
-    +
-      simpl in *.
-      destruct (parts xs) eqn : Ha ; simpl in * ; try contradiction.
+  Definition non_empty (xs : list (list A)) :=
+    match xs with
+    | [] => false
+    | _  => true
+    end.
+
+  Fixpoint parts (xs : list A) : list (list (list A)) :=
+    match xs with
+    | [] => [[]]
+    | [ c ] => [[[ c ]]]
+    | (c :: cs) =>
+      concat (map (fun ps => [ athead c ps ; [c] :: ps ]) (filter non_empty(parts cs)))
+    end.
+
 End PARTS.
