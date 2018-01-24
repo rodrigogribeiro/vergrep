@@ -1,5 +1,6 @@
 -R . regex
 
+Accept/Accept.v
 Derivatives/Smart.v
 Derivatives/Brzozowski.v
 Derivatives/Antimirov.v
