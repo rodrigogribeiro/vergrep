@@ -18,6 +18,12 @@ Proof.
   induction s ; destruct s' ; crush ; fequals*.
 Qed.
 
+Lemma string_to_list_app
+  : forall s s', string_to_list (s ++ s') = (string_to_list s) ++ (string_to_list s').
+Proof.
+  induction s ; destruct s' ; crush.
+Qed.
+
 Fixpoint list_to_string (xs : list ascii) : string :=
   match xs with
   | [] => EmptyString
@@ -29,6 +35,12 @@ Lemma list_to_string_app
              ((list_to_string xs) ++ (list_to_string ys))%string.
 Proof.
   induction xs ; crush.
+Qed.
+
+Lemma list_to_string_inj
+  : forall xs ys, list_to_string xs = list_to_string ys -> xs = ys.
+Proof.
+  induction xs ; destruct ys ; crush ; fequals*.
 Qed.
 
 Lemma string_to_list_list_to_string
@@ -83,8 +95,6 @@ Section SPLIT_STRING.
     map (fun p => (list_to_string (fst p), list_to_string (snd p)))
         (splits (string_to_list s)).
 
-  Check splits_append_correct.
-  
   Lemma splits_string_correct
     : forall s s1 s2, In (s1,s2) (splits_string s) -> (s1 ++ s2)%string = s.
   Proof.
@@ -98,5 +108,20 @@ Section SPLIT_STRING.
     rewrite <- list_to_string_app.
     rewrite <- list_to_string_string_to_list.
     fequals*.
+  Qed.
+
+  Lemma append_splits_string_correct
+    : forall s s1 s2, s = (s1 ++ s2)%string -> In (s1,s2) (splits_string s).
+  Proof.
+    unfold splits_string.
+    intros s s1 s2 Heq.
+    rewrite <- list_to_string_string_to_list in Heq.
+    rewrite <- (list_to_string_string_to_list s) in Heq.
+    eapply list_to_string_inj in Heq.
+    rewrite string_to_list_app in Heq.
+    apply append_splits_correct in Heq.
+    apply in_map_iff.
+    exists ((string_to_list s1), (string_to_list s2)) ; crush.
+    fequals ; apply list_to_string_string_to_list.
   Qed.
 End SPLIT_STRING.

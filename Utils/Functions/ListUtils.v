@@ -1,6 +1,7 @@
 Set Implicit Arguments.
 
 Require Import
+        Bool
         List
         Tactics.Tactics.
 
@@ -26,6 +27,26 @@ Section SPLITS.
     apply IHxs in Hin.
     rewrite Hin.
     auto.
+  Qed.
+
+  Lemma append_nil
+    : forall (xs ys : list A), [] = xs ++ ys -> xs = [] /\ ys = [].
+  Proof.
+    induction xs ; destruct ys ; crush.
+  Qed.
+
+  Lemma append_splits_correct
+    : forall xs ys zs, xs = ys ++ zs -> In (ys,zs) (splits xs).
+  Proof.
+    induction xs ; intros ; simpl in *.
+    +
+      apply append_nil in H ; destruct H ; substs*.
+    +
+      destruct ys. simpl in *. rewrite <- H. left*.
+      right. simpl in *.
+      apply in_map_iff.
+      inverts* H.
+      exists (ys,zs). simpl in *. splits*.
   Qed.
 
   Lemma splits_size
@@ -97,3 +118,47 @@ Section PARTS.
       crush.
    Qed.      
 End PARTS.
+
+Section FORALL.
+
+  Variable A : Type.
+
+  Lemma forallb_Forall
+    : forall (xs : list A) f, forallb f xs = true <-> Forall (fun x => f x = true) xs.
+  Proof.
+    induction xs ; intro f ; splits ; intros ; crush.
+    +
+      apply andb_prop in H. destruct H.
+      apply IHxs in H0.
+      constructor ; auto.
+    +
+      inverts* H.
+      apply IHxs in H3.
+      crush.
+  Qed.
+End FORALL.
+
+Section EXISTS.
+
+  Variable A : Type.
+
+  Lemma existsb_Exists
+    : forall (xs : list A) f, existsb f xs = true <-> Exists (fun x => f x = true) xs.
+  Proof.
+    induction xs ; intros f ; splits ; intros H ; simpl in * ; inverts H.
+    +
+      apply orb_prop in H1.
+      destruct* H1. constructor ; rewrite H ; auto.
+      rewrite H.
+      rewrite orb_true_r.
+      apply Exists_cons.
+      right*. apply IHxs in H. auto.
+    +
+      crush.
+    +
+      apply IHxs in H1.
+      rewrite H1.
+      rewrite orb_true_r.
+      auto.
+  Qed.
+End EXISTS.
