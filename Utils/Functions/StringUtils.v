@@ -81,7 +81,7 @@ Section PARTS_STRING.
     intros s yss H.
     eapply in_map_iff in H.
     destruct H as [x [Heq HIn]].
-    apply parts_correct in HIn ; auto.
+    apply parts_append_correct in HIn ; auto.
     substs. rewrite <- (string_to_list_list_to_string (concat x)) in HIn.
     eapply string_to_list_inj in HIn.
     rewrite list_to_string_concat in HIn.

@@ -97,7 +97,7 @@ Section PARTS.
       flat_map (fun ps => [ athead c ps ; [c] :: ps ]) (filter non_empty (parts cs))
     end.
 
-  Lemma parts_correct
+  Lemma parts_append_correct
     : forall xs yss, In yss (parts xs) -> concat yss = xs.
   Proof.
     induction xs ; intros.
@@ -116,8 +116,24 @@ Section PARTS.
       rewrite <- H.
       simpl in HInyss.
       crush.
-   Qed.      
-End PARTS.
+  Qed.
+
+  Lemma empty_app_both_empty 
+    : forall (xs ys : list A), [] = xs ++ ys -> xs = [] /\ ys = [].
+  Proof.
+    induction xs ; destruct ys ; intros ; crush.
+  Qed.
+
+  Lemma concat_empty
+    : forall (yss : list (list A)), concat yss = [] -> Forall (fun ys => ys = []) yss.
+  Proof.
+    induction yss ; crush.
+    constructor ;
+    symmetry in H ;
+    apply empty_app_both_empty in H ; destruct* H.
+  Qed.
+
+ End PARTS.
 
 Section FORALL.
 

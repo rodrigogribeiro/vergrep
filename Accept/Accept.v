@@ -32,9 +32,19 @@ Proof.
   apply existsb_Exists.
   apply Exists_exists.
   exists (s,s') ; splits*.
-  Search splits_string.
   apply append_splits_string_correct  with (s := (s ++ s')) ; auto.
   crush.
+Qed.
+
+Lemma accept_star
+  : forall e s s', accept e s = true ->
+              accept (e ^*) s' = true ->
+              accept (e ^*) (s ++ s') = true.
+Proof.
+  intros e s s' He Hes.
+  apply existsb_Exists.
+  apply Exists_exists.
+
 Qed.
 
 Hint Resolve accept_cat.
@@ -69,8 +79,7 @@ Proof.
     apply existsb_Exists in H.
     apply Exists_exists in H.
     destruct H as [x [Hin Hfa]].
-   
-Admitted.
+Qed.
 
 Lemma accept_complete
   : forall e s, s <<- e -> accept e s = true.
@@ -78,5 +87,10 @@ Proof.
   induction e ; intros s H ; inverts* H.
   +
     simpl ; destruct (ascii_dec a a) ; crush.
-Admitted.
+  +
+    lets* J : IHe1 H2. crush.
+  +
+    lets* J : IHe2 H2. crush.
+  +
+Qed.
     
