@@ -94,7 +94,8 @@ Section PARTS.
     | [] => [[]]
     | [ c ] => [[[ c ]]]
     | (c :: cs) =>
-      flat_map (fun ps => [ athead c ps ; [c] :: ps ]) (filter non_empty (parts cs))
+      flat_map (fun ps => [ athead c ps ; [c] :: ps ])
+               (filter non_empty (parts cs))
     end.
 
   Lemma parts_append_correct
@@ -131,6 +132,12 @@ Section PARTS.
     constructor ;
     symmetry in H ;
     apply empty_app_both_empty in H ; destruct* H.
+  Qed.
+
+  Lemma parts_empty
+    : forall (xs : list A), In [[]] (parts xs) -> xs = [].
+  Proof.
+    intros xs H ; apply parts_append_correct in H ; crush.
   Qed.
 
  End PARTS.
@@ -178,3 +185,15 @@ Section EXISTS.
       auto.
   Qed.
 End EXISTS.
+
+
+Section OPTION.
+  Variable A : Type.
+
+  Definition is_some (v : option A) : bool :=
+    match v with
+    | Some _ => true
+    | _      => false
+    end.
+
+End OPTION.

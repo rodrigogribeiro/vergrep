@@ -43,10 +43,22 @@ Proof.
   induction xs ; destruct ys ; crush ; fequals*.
 Qed.
 
+Lemma list_to_string_empty
+  : forall xs, list_to_string xs = EmptyString -> xs = [].
+Proof.
+  induction xs ; crush.
+Qed.
+
 Lemma string_to_list_list_to_string
   : forall xs, string_to_list (list_to_string xs) = xs.
 Proof.
   induction xs ; crush.
+Qed.
+
+Lemma string_to_list_empty
+  : forall s, string_to_list s = [] -> s = EmptyString.
+Proof.
+  induction s ; crush.
 Qed.
 
 Lemma list_to_string_string_to_list
@@ -87,6 +99,29 @@ Section PARTS_STRING.
     rewrite list_to_string_concat in HIn.
     auto.
   Qed.
+
+  Lemma map_to_string_empty
+    : forall xs, map list_to_string xs = [""] -> xs = [[]].
+  Proof.
+    induction xs ; intros H ; simpl in * ; try discriminate.
+    inverts* H.
+    apply map_eq_nil in H2.
+    substs. apply list_to_string_empty in H1 ; substs*.
+  Qed.
+
+  Lemma parts_string_empty
+    : forall s, In [""] (parts_string s) -> s = "".
+  Proof.
+    pose ascii_dec as K.
+    intros ; unfold parts_string in *.
+    apply in_map_iff in H.
+    destruct H as [x [Heq Hin]].
+    apply parts_append_correct in Hin ; auto.
+    apply map_to_string_empty in Heq.
+    substs. simpl in *. symmetry in Hin.
+    apply string_to_list_empty in Hin ; auto.
+  Qed.
+
 End PARTS_STRING.
 
 Section SPLIT_STRING.

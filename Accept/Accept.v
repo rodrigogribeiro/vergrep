@@ -6,6 +6,7 @@ Require Import
         Utils.Functions.ListUtils
         Utils.Functions.StringUtils.
 
+Import ListNotations.
 
 Fixpoint accept (e : regex)(s : string) : bool :=
   match e with
@@ -36,15 +37,19 @@ Proof.
   crush.
 Qed.
 
-Lemma accept_star
-  : forall e s s', accept e s = true ->
-              accept (e ^*) s' = true ->
-              accept (e ^*) (s ++ s') = true.
+Lemma parts_string_non_empty
+  : forall s, In [] (parts_string s) -> s = "".
 Proof.
-  intros e s s' He Hes.
-  apply existsb_Exists.
-  apply Exists_exists.
-
+  pose ascii_dec as K.
+  intros s H.
+  unfold parts_string in *.
+  apply in_map_iff in H.
+  destruct H as [x [Heq Hin]].
+  apply map_eq_nil in Heq. substs.
+  apply parts_append_correct in Hin ; auto.
+  simpl in *.
+  symmetry in Hin.
+  apply string_to_list_empty in Hin ; auto.
 Qed.
 
 Hint Resolve accept_cat.
@@ -79,8 +84,10 @@ Proof.
     apply existsb_Exists in H.
     apply Exists_exists in H.
     destruct H as [x [Hin Hfa]].
-Qed.
-
+    destruct s ; eauto.
+    eapply forallb_Forall in Hfa.
+Admitted.
+     
 Lemma accept_complete
   : forall e s, s <<- e -> accept e s = true.
 Proof.
@@ -92,5 +99,10 @@ Proof.
   +
     lets* J : IHe2 H2. crush.
   +
-Qed.
+    apply IHe in H1.
+    simpl.
+    apply existsb_Exists.
+    apply Exists_exists.
+    
+Admitted.
     
