@@ -18,24 +18,24 @@ Inductive bit: Set := Zero | One.
 
 Open Scope list_scope.
 
-Inductive is_code_of : list bit -> tree -> Prop :=
-| ICEps : is_code_of [] TEps
-| ICChr : forall c, is_code_of [] (TChr c)
-| ICLeft : forall xs l, is_code_of xs l ->
-                   is_code_of (Zero :: xs) (TLeft l)
-| ICRight : forall xs r, is_code_of xs r ->
-                    is_code_of (One :: xs) (TRight r)
-| ICCat : forall xs ys zs l r,
-    is_code_of xs l ->
-    is_code_of ys r ->
+Inductive is_code_of : list bit -> tree -> regex -> Prop :=
+| ICEps : is_code_of [] TEps #1
+| ICChr : forall c, is_code_of [] (TChr c) ($ c)
+| ICLeft : forall xs l r tl, is_code_of xs tl l ->
+                        is_code_of (Zero :: xs) (TLeft tl) (l :+: r)
+| ICRight : forall xs l r tr, is_code_of xs tr r ->
+                         is_code_of (One :: xs) (TRight tr) (l :+: r)
+| ICCat : forall xs ys zs l r tl tr,
+    is_code_of xs tl l ->
+    is_code_of ys tr r ->
     zs = xs ++ ys ->
-    is_code_of zs (TCat l r)
-| ICStarEnd : is_code_of [ One ] TStarEnd
+    is_code_of zs (TCat tl tr) (l @ r)
+| ICStarEnd : forall e, is_code_of [ One ] TStarEnd (e ^*)
 | ICStarRec
-  : forall xs xss tl tls,
-    is_code_of xs tl  ->
-    is_code_of xss tls ->
-    is_code_of (Zero :: xs ++ xss) (TStarRec tl tls).
+  : forall xs xss e tl tls,
+    is_code_of xs tl e ->
+    is_code_of xss tls (e ^*) ->
+    is_code_of (Zero :: xs ++ xss) (TStarRec tl tls) (e ^*).
 
 Hint Constructors is_code_of.
 
@@ -52,7 +52,7 @@ Fixpoint code (t : tree) : list bit :=
 
 Lemma code_correct
   : forall t e, is_tree_of t e ->
-           is_code_of (code t) t.
+           is_code_of (code t) t e.
 Proof.
   induction t ; intros r H ; inverts* H ; crush ;
   try solve [lets* J : IHt H1] ;
@@ -61,7 +61,16 @@ Qed.
 
 Fixpoint decode' (n : nat)(bs : list bit)(e : regex) : option (tree * list bit) :=
   match n with
-  | O => None
+  | O =>
+    match bs, e with
+    | [] , #1 => Some (TEps, [])
+    | [] , $ a => Some (TChr a, [])
+    | [] , _ ^* => Some (TStarEnd, [])
+    | [] , #1 @ #1 => Some (TCat TEps TEps, [])
+    | [] , #1 :+: _ => Some (TLeft TEps, [])
+    | [] , _ :+: #1 => Some (TRight TEps, [])
+    | _ , _ => None
+    end
   | S n' => 
     match bs, e with
     | _ , #1  => Some (TEps, bs)
@@ -99,9 +108,46 @@ Fixpoint decode' (n : nat)(bs : list bit)(e : regex) : option (tree * list bit) 
     end
   end.
 
+Lemma decode'_code
+  : forall t e, is_tree_of t e ->
+           exists bs, decode' (List.length (code t)) (code t) e = Some (t,bs).
+Proof.
+  induction t ; intros e H ; inverts* H.
+  +
+    exists (@nil bit) ; crush.
+  +
+    exists (@nil bit) ; crush.
+  +
+    lets J : IHt H1.
+    destruct J as [bs Heq].
+    exists bs ; crush.
+  +
+    lets J : IHt H1.
+    destruct J as [bs Heq].
+    exists bs ; crush.
+  +
+    lets J : IHt1 H2.
+    lets J1 : IHt2 H4.
+    destruct J as [bs Heq].
+    destruct J1 as [bs1 Heq1].
+    exists (bs ++ bs1).
+    simpl.
+    unfold decode'.
+
 Definition decode (bs : list bit)(e : regex) : option tree :=
   match decode' (List.length bs) bs e with
   | Some (t , []) => Some t
   | _             => None
   end.
 
+Theorem decode_code
+  : forall t bs e, is_code_of bs t e ->
+              is_tree_of t e ->
+               decode (code t) e = Some t.
+Proof.
+  induction t ; intros bs e H Ht ; inverts* H ; inverts* Ht ; crush.
+  +
+    lets J : IHt H2 H1.
+
+Lemma decode_cat
+  : forall tl tr l r, is_tree_of

@@ -1,9 +1,12 @@
 Set Implicit Arguments.
 
 Require Import
+        List 
         Ascii
         String
         Syntax.Regex.
+
+Import ListNotations.
 
 Inductive tree : Set :=
 | TEps  : tree
@@ -11,8 +14,14 @@ Inductive tree : Set :=
 | TLeft : tree -> tree
 | TRight : tree -> tree
 | TCat  : tree -> tree -> tree
-| TStarEnd : tree 
-| TStarRec : tree -> tree -> tree.
+| TStar : list tree -> tree.
+
+Section TREE_IND.
+  Variable P : tree -> Prop.
+  Variable Q : list tree -> Prop.
+
+  Hypothesis
+    (H : 
 
 Inductive is_tree_of : tree -> regex -> Prop :=
 | ITEps : is_tree_of TEps #1
@@ -22,11 +31,8 @@ Inductive is_tree_of : tree -> regex -> Prop :=
 | ITCat : forall tl tr l r, is_tree_of tl l ->
                        is_tree_of tr r ->
                        is_tree_of (TCat tl tr) (l @ r)
-| ITStarEnd : forall l, is_tree_of TStarEnd (l ^*)
-| ITStarRec :
-    forall l tl tls, is_tree_of tl l ->
-                is_tree_of tls (l ^*) ->
-                is_tree_of (TStarRec tl tls) (l ^*).
+| ITStar : forall e ts, Forall (fun t => is_tree_of t e) ts ->
+                   is_tree_of (TStar ts)  (e ^*).
 
 Hint Constructors is_tree_of.
 
@@ -37,15 +43,14 @@ Fixpoint flat (t : tree) : string :=
   | TLeft t => flat t
   | TRight t => flat t
   | TCat t t' => flat t ++ flat t'
-  | TStarEnd => ""
-  | TStarRec t ts => flat t ++ flat ts
+  | TStar ts => fold_right (fun t ac => flat t ++ ac) "" ts
   end.
 
 Lemma flat_correct : forall t e, is_tree_of t e -> (flat t) <<- e.
 Proof.
-  induction t ; intros e H ; inverts H ; simpl in * ; jauto.
+  induction 1 ; crush.
   +
-    lets J : IHt1 H2.
-    lets K : IHt2 H4.
-    destruct (flat t1) eqn : Ha ; simpl in * ; jauto.
+    eapply InCat ; eauto.
+  +
+    
 Qed.
