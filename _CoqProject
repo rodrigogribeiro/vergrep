@@ -21,6 +21,7 @@ Tactics/Crush.v
 Tactics/Tactics.v
 Tests/Generators/GenString.v
 Tests/Generators/GenUtils.v
+Utils/Notations.v
 Utils/Functions/Functions.v
 Utils/Functions/ListUtils.v
 Utils/Functions/StringUtils.v

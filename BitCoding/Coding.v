@@ -1,10 +1,12 @@
 Set Implicit Arguments.
 
-
 Require Import
         Ascii
         List
+        Relations.Relation_Operators
+        Wellfounded.Lexicographic_Product
         Parsing.Tree
+        Utils.Notations
         Utils.Functions.StringUtils
         Syntax.Regex.
 
@@ -18,24 +20,24 @@ Inductive bit: Set := Zero | One.
 
 Open Scope list_scope.
 
-Inductive is_code_of : list bit -> tree -> regex -> Prop :=
-| ICEps : is_code_of [] TEps #1
-| ICChr : forall c, is_code_of [] (TChr c) ($ c)
-| ICLeft : forall xs l r tl, is_code_of xs tl l ->
-                        is_code_of (Zero :: xs) (TLeft tl) (l :+: r)
-| ICRight : forall xs l r tr, is_code_of xs tr r ->
-                         is_code_of (One :: xs) (TRight tr) (l :+: r)
-| ICCat : forall xs ys zs l r tl tr,
-    is_code_of xs tl l ->
-    is_code_of ys tr r ->
+Inductive is_code_of : list bit -> regex -> Prop :=
+| ICEps : is_code_of [] #1
+| ICChr : forall c, is_code_of [] ($ c)
+| ICLeft : forall xs l r, is_code_of xs l ->
+                     is_code_of (Zero :: xs) (l :+: r)
+| ICRight : forall xs l r, is_code_of xs r ->
+                      is_code_of (One :: xs) (l :+: r)
+| ICCat : forall xs ys zs l r,
+    is_code_of xs l ->
+    is_code_of ys r ->
     zs = xs ++ ys ->
-    is_code_of zs (TCat tl tr) (l @ r)
-| ICStarEnd : forall e, is_code_of [ One ] TStarEnd (e ^*)
+    is_code_of zs (l @ r)
+| ICStarEnd : forall e, is_code_of [ One ] (e ^*)
 | ICStarRec
-  : forall xs xss e tl tls,
-    is_code_of xs tl e ->
-    is_code_of xss tls (e ^*) ->
-    is_code_of (Zero :: xs ++ xss) (TStarRec tl tls) (e ^*).
+  : forall xs xss e,
+    is_code_of xs e ->
+    is_code_of xss (e ^*) ->
+    is_code_of (Zero :: xs ++ xss) (e ^*).
 
 Hint Constructors is_code_of.
 
@@ -46,26 +48,148 @@ Fixpoint code (t : tree) : list bit :=
   | TLeft tl => Zero :: code tl
   | TRight tr => One :: code tr
   | TCat tl tr => code tl ++ code tr
-  | TStarEnd => [ One ]
-  | TStarRec tl tls => Zero :: code tl ++ code tls
+  | TStar ts => fold_right (fun t ac => Zero :: code t ++ ac) [ One ] ts
   end.
 
 Lemma code_correct
   : forall t e, is_tree_of t e ->
-           is_code_of (code t) t e.
+           is_code_of (code t) e.
 Proof.
-  induction t ; intros r H ; inverts* H ; crush ;
-  try solve [lets* J : IHt H1] ;
-  lets* J : IHt1 H2.
+  intros t e H ; induction H ; simpl ; eauto.
 Qed.
 
+Section WF_DECODE.
+  Definition decode_input := sigT (fun _ : list bit => regex).
+
+  Definition mk_input (bs : list bit)(e : regex) :=
+    existT _ bs e.
+
+  Definition get_bits (inp : decode_input) : list bit :=
+    let (bs,_) := inp in bs.
+
+  Definition get_regex (inp : decode_input) : regex :=
+    let (_,e) := inp in e.
+
+  Definition decode_input_lt : decode_input -> decode_input -> Prop :=
+    lexprod (list bit)
+            (fun _ => regex)
+            (fun (xs ys : list bit) => List.length xs < List.length ys)
+            (fun (xs : list bit)(e e' : regex) => size e < size e').
+
+  Definition wf_decode_input : well_founded decode_input_lt :=
+    @wf_lexprod (list bit)
+                (fun _ : list bit => regex)
+                (fun (xs ys : list bit) => List.length xs < List.length ys)
+                (fun (xs : list bit)(e e' : regex) => size e < size e')
+                (well_founded_ltof (list bit) (@List.length bit))
+                (fun _ => well_founded_ltof regex size).
+End WF_DECODE.
+
+
+Definition decode_type (inp : decode_input) :=
+  {p : (tree * list bit) | exists bs1 bs2 t, p = (t,bs1) /\
+                                        is_tree_of t (get_regex inp) /\
+                                        is_code_of bs1 (get_regex inp) /\
+                                        (get_bits inp) = bs1 ++ bs2} +
+  {forall t, ~ is_tree_of t (get_regex inp)}.
+
+Definition decode'_body
+           (inp : decode_input)
+           (decode'
+              : forall (inp' : decode_input),
+               decode_input_lt inp' inp -> decode_type inp')
+  : decode_type inp.
+  unfold decode_type.
+  destruct inp as [bs e]. simpl in *.
+  refine ( match bs, e with
+           | _ , #0 => !!
+           | _ , #1 => [|| (TEps , bs) ||] 
+           | _ , ($ c) => [|| (TChr c, bs) ||]
+           | Zero :: bs' , (e :+: e') =>
+             match decode' (mk_input bs' e) _ with
+             | [|| (tl , bs1) ||] => [|| (TLeft tl, bs1) ||]
+             | !! => !!
+             end
+           | One :: bs' , (e :+: e') =>
+             match decode' (mk_input bs' e') _ with
+             | [|| (tr , bs1) ||] => [|| (TRight tr, bs1) ||]
+             | !! => !!
+             end
+           | _ , e @ e' =>
+             match decode' (mk_input bs e) _ with
+             | [|| (tl, bs') ||] =>
+               match decode' (mk_input bs' e') _ with
+               | [|| (tr, bs'') ||] => [|| (TCat tl tr, bs'') ||]
+               | !! => !!
+               end
+             | !! => !!
+             end
+           | Zero :: bs' , (Star e) =>
+             match decode' (mk_input bs' e) _ with
+             | [|| (tl , bs'') ||] =>
+               match decode' (mk_input bs'' (Star e)) _ with
+               | [|| ((TStar tls), bs''') ||] => [|| (TStar (tl :: tls), bs''') ||]
+               | _ => !! 
+               end
+             | !! => !!
+             end
+           | One :: bs' , (Star e) => _
+           | _ , _ => !!
+           end) ; subst* ; simpl in * ; try solve [intros t H ; inverts H].
+  Focus 4.
+
+  Require Import Program.
+
+Program Fixpoint decode'
+        (inp : decode_input)
+        {wf decode_input inp} : option (tree * list bit) :=
+  match inp with
+  | existT _ bs e => 
+    match bs, e with
+    | _ , #1 => Some (TEps, bs)
+    | _ , ($ a) => Some (TChr a, bs)
+    | Zero :: bs', e :+: e' =>
+      match decode' (existT bs' e) with
+      | Some (tl,bs'') => Some (TLeft tl, bs'')
+      | None => None
+      end
+    | One :: bs', e :+: e' =>
+      match decode' (existT bs' e') with
+      | Some (tr, bs'') => Some (TRight tr, bs'')
+      | None => None
+      end
+    | _ , e @ e' =>
+      match decode' (existT bs e) with
+      | Some (tl, bs') =>
+        match decode' (existT bs' e') with
+        | Some (tr, bs'') => Some (TCat tl tr, bs'')
+        | None => None
+        end
+      | None => None
+      end
+    | (One :: bs'), (Star e) => Some (TStar [], bs')
+    | (Zero :: bs'), (Star e) =>
+      match decode' (existT bs' e) with
+      | Some (tl, bs1) =>
+        match decode' (existT bs1 (Star e)) with
+        | Some ((TStar tls), bs2) => Some (TStar (tl :: tls), bs2)
+        | _ => None
+        end
+      | None => None
+      end
+    | _ , _ => None
+    end
+  end.
+Next Obligation.
+
+(*
 Fixpoint decode' (n : nat)(bs : list bit)(e : regex) : option (tree * list bit) :=
   match n with
   | O =>
     match bs, e with
     | [] , #1 => Some (TEps, [])
     | [] , $ a => Some (TChr a, [])
-    | [] , _ ^* => Some (TStarEnd, [])
+    | [] , _ ^* => Some (TStar [] , [])
     | [] , #1 @ #1 => Some (TCat TEps TEps, [])
     | [] , #1 :+: _ => Some (TLeft TEps, [])
     | [] , _ :+: #1 => Some (TRight TEps, [])
@@ -97,13 +221,13 @@ Fixpoint decode' (n : nat)(bs : list bit)(e : regex) : option (tree * list bit) 
     | Zero :: bs', e ^* =>
       match decode' n' bs' e with
       | Some (te , bs'') =>
-        match decode' n' bs'' (e ^*) with
-        | Some (te', bs''') => Some (TStarRec te te', bs''')
-        | None => None
+        match decode' n' bs'' (Star e) with
+        | Some (TStar te', bs''') => Some (TStar (te :: te'), bs''')
+        | _ => None
         end
       | _ => None
       end
-    | One :: bs', e ^* => Some (TStarEnd , bs') 
+    | One :: bs', Star e => Some (TStar [] , bs') 
     | _ , _  => None
     end
   end.
@@ -112,27 +236,21 @@ Lemma decode'_code
   : forall t e, is_tree_of t e ->
            exists bs, decode' (List.length (code t)) (code t) e = Some (t,bs).
 Proof.
-  induction t ; intros e H ; inverts* H.
+  intros t e H ; induction H.
   +
     exists (@nil bit) ; crush.
   +
     exists (@nil bit) ; crush.
   +
-    lets J : IHt H1.
-    destruct J as [bs Heq].
+    destruct IHis_tree_of as [bs Heq].
     exists bs ; crush.
   +
-    lets J : IHt H1.
-    destruct J as [bs Heq].
+    destruct IHis_tree_of as [bs Heq].
     exists bs ; crush.
   +
-    lets J : IHt1 H2.
-    lets J1 : IHt2 H4.
-    destruct J as [bs Heq].
-    destruct J1 as [bs1 Heq1].
-    exists (bs ++ bs1).
-    simpl.
-    unfold decode'.
+    destruct IHis_tree_of1 as [bs Heq].
+    destruct IHis_tree_of2 as [bs1 Heq1].
+    exists (bs ++ bs1) ; crush.
 
 Definition decode (bs : list bit)(e : regex) : option tree :=
   match decode' (List.length bs) bs e with
@@ -148,6 +266,4 @@ Proof.
   induction t ; intros bs e H Ht ; inverts* H ; inverts* Ht ; crush.
   +
     lets J : IHt H2 H1.
-
-Lemma decode_cat
-  : forall tl tr l r, is_tree_of
+Admitted. *)

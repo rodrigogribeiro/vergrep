@@ -128,6 +128,16 @@ Proof.
     apply orb_prop_intro. right*.
 Qed.
 
+(* size *)
+
+Fixpoint size (e : regex) : nat :=
+  match e with
+  | e1 :+: e2 => 1 + max (size e1) (size e2)
+  | e1 @ e2 => 1 + max (size e1) (size e2)
+  | Star e => 1 + size e
+  | _ => 1
+  end.
+
 (** equivalence *)
 
 Definition regex_equiv (e e' : regex) : Prop :=

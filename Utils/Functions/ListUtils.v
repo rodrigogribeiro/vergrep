@@ -145,6 +145,7 @@ Section PARTS.
 Section FORALL.
 
   Variable A : Type.
+  Variable P : A -> Prop.
 
   Lemma forallb_Forall
     : forall (xs : list A) f, forallb f xs = true <-> Forall (fun x => f x = true) xs.
@@ -158,6 +159,12 @@ Section FORALL.
       inverts* H.
       apply IHxs in H3.
       crush.
+  Qed.
+
+  Lemma fold_right_Forall
+    : forall (xs : list A), fold_right (fun x ac => P x /\ ac) True xs <-> Forall P xs.
+  Proof.
+    induction xs ; splits ; intros H ; try inverts* H ; crush.
   Qed.
 End FORALL.
 
